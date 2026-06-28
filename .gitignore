@@ -1,0 +1,10 @@
+# Root-level ignores
+node_modules/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Ignore backend uploads
+Ariadne-Backend/uploads/
