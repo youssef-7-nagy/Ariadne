@@ -175,11 +175,11 @@ const About = () => {
                 </div>
             </section>
 
-            {/* ── 3D Rotating Partners Carousel ── */}
+            {/* ── 3D Glassmorphic Partners Carousel ── */}
             <section className="about-partners">
                 <div className="about-partners-inner">
                     <div className="about-section-header">
-                        <h2>Trusted By Industry Leaders</h2>
+                        <h2>Trusted By Industry <span>Leaders</span></h2>
                         <p>
                             We're proud to partner with innovative brands and forward-thinking companies
                             that demand the very best in visual storytelling.
@@ -194,7 +194,7 @@ const About = () => {
                             {PARTNERS.map((partner, i) => (
                                 <div
                                     key={i}
-                                    className="partner-card"
+                                    className="partner-card glass-card"
                                     style={{
                                         '--index': i,
                                         '--color-card': partner.color,
@@ -208,17 +208,11 @@ const About = () => {
                                                 style={partner.contain ? { objectFit: 'contain', padding: partner.padding || '15px' } : {}}
                                             />
                                         ) : (
-                                            <span style={{
-                                                fontSize: '2.8rem',
-                                                fontWeight: 900,
-                                                color: '#fff',
-                                                fontFamily: 'Montserrat, sans-serif',
-                                                lineHeight: 1,
-                                            }}>
+                                            <span className="text-logo">
                                                 {partner.letter}
                                             </span>
                                         )}
-                                        <span className="partner-name">{partner.name}</span>
+                                        <div className="partner-glow"></div>
                                     </div>
                                 </div>
                             ))}

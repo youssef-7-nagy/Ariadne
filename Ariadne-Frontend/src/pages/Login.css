@@ -14,6 +14,7 @@
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 80px);
+    min-height: calc(100dvh - 80px);
     font-family: 'Montserrat', sans-serif;
     overflow: hidden;
     padding: 20px;
@@ -25,7 +26,7 @@
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1), 0 0 20px rgba(31, 117, 184, 0.05);
     position: relative;
     overflow: hidden;
-    width: 900px; /* Widened slightly for better internal spacing */
+    width: clamp(300px, 90%, 900px);
     max-width: 100%;
     min-height: 550px; /* Increased to accommodate the 4 inputs perfectly */
 }

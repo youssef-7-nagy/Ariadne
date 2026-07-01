@@ -4,6 +4,7 @@
     top: 0;
     z-index: 1000;
     width: 100%;
+    padding-top: env(safe-area-inset-top);
 }
 
 .top-bar {
@@ -846,3 +847,133 @@
         transform: none;
     }
 }
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM MOBILE NAV — iPhone / Android Optimization
+   All breakpoints are mobile-only. Desktop is untouched.
+   ═══════════════════════════════════════════════════════ */
+
+/* --- 768px and below: refine the mobile dropdown experience --- */
+@media (max-width: 768px) {
+    /* Collapse top bar gracefully */
+    .top-bar__content {
+        grid-template-columns: 1fr;
+        padding: 0.6rem 16px;
+        gap: 0.5rem;
+    }
+
+    .top-bar__group {
+        gap: 0.6rem;
+        flex-wrap: wrap;
+    }
+
+    .top-bar__item {
+        font-size: 0.78rem;
+    }
+
+    .social-links {
+        gap: 10px;
+        justify-self: start;
+    }
+
+    /* Main navbar padding */
+    .navbar {
+        padding: 8px 16px;
+        min-height: 56px;
+    }
+
+    /* Logo scaling */
+    .logo-text {
+        font-size: clamp(18px, 5vw, 22px);
+    }
+
+    .logo-img {
+        height: 32px;
+    }
+
+    /* Hamburger – proper 44×44 touch target */
+    .hamburger {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        border-radius: 10px;
+        margin: 0;
+    }
+
+    /* Mobile nav menu */
+    .nav-links {
+        top: 56px;
+        border-radius: 0 0 16px 16px;
+        background: var(--nav-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.25s ease;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Each nav link: 48px minimum touch target */
+    .nav-links a,
+    .mobile-logout-btn {
+        padding: 14px 20px;
+        font-size: 16px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    /* Profile dropdown stays usable on mobile */
+    .profile-dropdown-menu {
+        min-width: 220px;
+        right: 0;
+    }
+
+    .dropdown-item,
+    .dropdown-logout-btn {
+        min-height: 48px;
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+}
+
+/* --- 480px: small phones --- */
+@media (max-width: 480px) {
+    .top-bar__group--center { display: none; } /* hide decorative center text on tiny screens */
+    .top-bar__content { padding: 0.5rem 12px; }
+    .navbar { padding: 6px 12px; }
+    .logo-text { font-size: 18px; }
+    .logo-subtext { font-size: 9px; letter-spacing: 0.5px; }
+    .social-icon { width: 28px; height: 28px; }
+}
+
+/* --- 390px: iPhone 14 Pro --- */
+@media (max-width: 390px) {
+    .navbar { padding: 6px 10px; }
+    .logo-text { font-size: 17px; }
+    .hamburger { font-size: 22px; }
+}
+
+/* --- 360px: Android mid-range --- */
+@media (max-width: 360px) {
+    .top-bar { display: none; } /* Remove top bar entirely on very small phones */
+    .navbar { padding: 6px 10px; }
+    .logo-text { font-size: 16px; }
+    .nav-links a, .mobile-logout-btn { font-size: 15px; padding: 12px 16px; }
+}
+
+/* --- 320px: iPhone SE --- */
+@media (max-width: 320px) {
+    .logo-text { font-size: 15px; }
+    .hamburger { width: 40px; height: 40px; font-size: 20px; }
+    .nav-links a, .mobile-logout-btn { font-size: 14px; padding: 11px 14px; }
+}

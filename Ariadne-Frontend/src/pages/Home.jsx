@@ -203,8 +203,6 @@ const Home = () => {
                 </div>
             </section>
 
-
-
             {/* Section 4: Testimonials */}
             <section className="home-section testimonials-section">
                 <div className="container text-center">

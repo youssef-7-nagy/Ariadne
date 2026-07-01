@@ -380,3 +380,82 @@
         /* Center the subscribe box on mobile */
     }
 }
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM MOBILE FOOTER — iPhone / Android Optimization
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .footer {
+        padding-top: 40px;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    .footer-col h3.footer-heading { font-size: 1rem; margin-bottom: 14px; }
+    .footer-about-text { font-size: 0.88rem; }
+
+    .footer-list li, .footer-contact-info li {
+        margin-bottom: 12px;
+        min-height: 44px;
+        align-items: center;
+    }
+
+    .footer-list a { font-size: 0.9rem; }
+
+    /* Subscribe box: full-width for tablet */
+    .subscribe { width: 100%; max-width: 300px; }
+
+    /* Footer bottom */
+    .footer-bottom { padding: 20px 0; }
+    .copyright-text { font-size: 0.82rem; }
+}
+
+@media (max-width: 576px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+
+    .bottom-wrapper { flex-direction: column; text-align: center; gap: 16px; }
+    .bottom-links { justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .magic-menu { padding-right: 0; }
+    .subscribe { margin: 0 auto; }
+}
+
+@media (max-width: 480px) {
+    .footer { padding-top: 32px; }
+    .footer-container { padding: 0 16px; }
+    .footer-grid { gap: 20px; }
+    .footer-logo .logo-img { width: 90px; height: 75px; }
+
+    /* Enlarge magic social touch targets */
+    .magic-menu li a {
+        width: 48px;
+        height: 48px;
+        font-size: 1.3rem;
+    }
+    .magic-toggle { width: 48px; height: 48px; }
+    .magic-menu:hover li {
+        transform: translateX(calc(55px * var(--i)));
+    }
+
+    .footer-bottom {
+        padding: 16px 0;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 390px) {
+    .footer-container { padding: 0 12px; }
+    .footer-col h3.footer-heading { font-size: 0.92rem; }
+    .footer-about-text { font-size: 0.82rem; }
+    .footer-list a { font-size: 0.82rem; }
+}
+
+@media (max-width: 360px) {
+    .footer { padding-top: 24px; }
+    .footer-grid { gap: 16px; }
+    .subscribe { width: 100%; }
+}

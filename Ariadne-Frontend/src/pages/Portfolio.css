@@ -8,7 +8,8 @@
 /* ─── Page Container ─── */
 .portfolio-container {
     min-height: 100vh;
-    padding: 2rem 2rem 6rem;
+    min-height: 100dvh;
+    padding: 2rem 2rem calc(6rem + env(safe-area-inset-bottom));
     background: #ffffff;
     color: #1a1f2c;
     position: relative;
@@ -997,6 +998,7 @@ html.dark .portfolio-subtitle {
 /* ─── Page Container ─── */
 .project-details-container {
     min-height: 100vh;
+    min-height: 100dvh;
     background: #ffffff;
     color: #1a1f2c;
     position: relative;
@@ -1733,4 +1735,38 @@ html.dark .pd-media-block {
         padding: 0.75rem 1.2rem;
     }
 }
+
+/* ─── Client Projects Page Styles ─── */
+.client-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 380px));
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .client-projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+}
+
+/* ─── Dark Mode Back Button Styling ─── */
+html.dark .pd-back {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html.dark .pd-back-icon {
+    background-color: #bd9f67; /* Elegant gold icon background in dark mode */
+}
+
+html.dark .pd-back-icon svg {
+    fill: #ffffff;
+}
+
 

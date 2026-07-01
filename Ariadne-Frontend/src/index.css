@@ -355,3 +355,50 @@ body {
   background: rgba(255, 255, 255, 0.16);
 }
 
+/* =============================================
+   GLOBAL MOBILE FOUNDATION (iPhone / Android)
+   All rules here are mobile-only. Desktop untouched.
+   ============================================= */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+@media (max-width: 768px) {
+  /* iOS 44pt HIG minimum touch targets */
+  a, button, [role="button"], [tabindex="0"] {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  button { touch-action: manipulation; }
+
+  /* Prevent iOS input zooming — minimum 16px */
+  input, select, textarea { font-size: max(16px, 1rem) !important; }
+
+  .app-toast-wrap { width: min(94vw, 380px); }
+}
+
+@media (max-width: 430px) {
+  .app-toast-wrap { width: min(96vw, 360px); }
+  .app-toast-card { padding: 10px; gap: 8px; border-radius: 10px; }
+}
+
+@media (max-width: 375px) {
+  .app-toast-title { font-size: 12px; }
+  .app-toast-body  { font-size: 11px; }
+}
