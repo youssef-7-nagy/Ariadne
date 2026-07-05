@@ -234,7 +234,7 @@ const Home = () => {
 
                         <div className="inner" style={{ 
                             '--quantity': categories.length || 10,
-                            transform: `perspective(1000px) rotateX(-15deg) rotateY(${-(360 / (categories.length || 1)) * activeIndex}deg)`
+                            transform: `perspective(1800px) rotateX(-15deg) rotateY(${-(360 / (categories.length || 1)) * activeIndex}deg)`
                         }}>
                             {categories.length > 0 ? categories.map((category, index) => {
                                 const bgImage = getCategoryBg(category);

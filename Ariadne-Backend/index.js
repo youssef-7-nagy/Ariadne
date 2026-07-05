@@ -55,6 +55,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
   }
 }));
 
+app.set("trust proxy", 1); // Trust first proxy (necessary for secure cookies behind a proxy/load balancer)
+
 // ─── Session (required by Passport for the OAuth redirect round-trip) ─────────
 app.use(
   session({
@@ -64,7 +66,8 @@ app.use(
     cookie: {
       // Session only needed for the brief OAuth redirect round-trip
       maxAge: 10 * 60 * 1000, // 10 minutes
-      secure: false, // set to true in production with HTTPS
+      secure: process.env.NODE_ENV === "production" || true, // Must be true for sameSite: 'none'
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' required for cross-origin cookies
     },
   })
 );
