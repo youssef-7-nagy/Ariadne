@@ -115,18 +115,8 @@ exports.createProject = async (req, res) => {
   try {
     const { title, slug, categoryId, description, date, clientName, tags, externalLink, mediaType } = req.body;
 
-    // ── Mandatory cover image validation ──
-    if (!req.files || !req.files['coverImage'] || req.files['coverImage'].length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Cover image is required. Please upload a cover photo for this project.'
-      });
-    }
-
     const media = processMedia(req.files, req.body);
-    const coverImage = await processCoverImage(req.files);
-
-    console.log(`[createProject] Cover image optimized: ${coverImage}`);
+    const coverImage = processCoverImage(req.files);
 
     const project = new Project({
       title, slug,
@@ -136,7 +126,7 @@ exports.createProject = async (req, res) => {
       externalLink,
       tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       media,
-      coverImage
+      ...(coverImage && { coverImage })
     });
     await project.save();
     res.status(201).json({ success: true, data: project });
@@ -168,7 +158,7 @@ exports.updateProject = async (req, res) => {
       }
     }
 
-    const coverImage = await processCoverImage(req.files);
+    const coverImage = processCoverImage(req.files);
     if (coverImage) {
       update.coverImage = coverImage;
     }
