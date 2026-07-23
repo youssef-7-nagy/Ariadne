@@ -1,7 +1,10 @@
+// ─── Load environment variables FIRST (before any import reads them) ─────────
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const authRouter = require("./routes/auth.routes");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const path = require("path");
 const fs = require("fs");
 const session = require("express-session");
@@ -9,15 +12,22 @@ const passport = require("./config/passport"); // loads and configures all strat
 
 const { databaseConnection } = require("./db/db.config");
 
-dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists and is writable
 const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+try {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  // Write-permission check
+  const testFile = path.join(uploadDir, '.write_test');
+  fs.writeFileSync(testFile, 'ok');
+  fs.unlinkSync(testFile);
+  console.log(`[OK] Uploads directory is writable: ${uploadDir}`);
+} catch (err) {
+  console.error(`[ERROR] Cannot write to uploads directory: ${uploadDir}`);
+  console.error(`[ERROR] Reason: ${err.message}`);
+  console.error('[ERROR] On Hostinger: ensure the Node.js process has write permission to this folder.');
 }
 
 app.use(express.json({ limit: '50mb' }));
@@ -66,7 +76,7 @@ app.use(
     cookie: {
       // Session only needed for the brief OAuth redirect round-trip
       maxAge: 10 * 60 * 1000, // 10 minutes
-      secure: process.env.NODE_ENV === "production" || true, // Must be true for sameSite: 'none'
+      secure: process.env.NODE_ENV === "production", // true in production (HTTPS), false in dev (localhost)
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' required for cross-origin cookies
     },
   })
@@ -89,26 +99,28 @@ app.use("/api/portfolio", portfolioRouter);
 const adminRouter = require("./routes/admin.routes");
 app.use("/api/admin", adminRouter);
 
-databaseConnection();
+// ─── Start server only after DB connects ─────────────────────────────────────
+(async () => {
+  await databaseConnection();
 
-// ─── Verify nodemailer SMTP connection on startup ────────────────────────────
-const { transporter } = require('./utils/mailer');
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('❌ Nodemailer SMTP connection FAILED:', error.message);
-    console.error('   → Check SMTP_USER and SMTP_PASS in your .env file.');
-  } else {
-    console.log('✅ Nodemailer SMTP connection verified — ready to send emails.');
-  }
-});
+  // Verify email service on startup
+  const { transporter } = require('./utils/mailer');
+  transporter.verify((error, success) => {
+    if (error) {
+      console.error('[ERROR] Nodemailer SMTP connection FAILED:', error.message);
+      console.error('   -> Check SMTP_USER and SMTP_PASS in your .env file.');
+    } else {
+      console.log('[OK] Nodemailer SMTP connection verified - ready to send emails.');
+    }
+  });
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 
-// Allow up to 30 minutes for large video uploads (3 GB at typical local speeds)
-const THIRTY_MINUTES = 30 * 60 * 1000;
-server.timeout = THIRTY_MINUTES;          // total request timeout
-server.headersTimeout = THIRTY_MINUTES;   // time to receive headers
-server.requestTimeout = THIRTY_MINUTES;   // time to receive the full request body
-
+  // Allow up to 30 minutes for large video uploads (3 GB at typical local speeds)
+  const THIRTY_MINUTES = 30 * 60 * 1000;
+  server.timeout = THIRTY_MINUTES;          // total request timeout
+  server.headersTimeout = THIRTY_MINUTES;   // time to receive headers
+  server.requestTimeout = THIRTY_MINUTES;   // time to receive the full request body
+})();

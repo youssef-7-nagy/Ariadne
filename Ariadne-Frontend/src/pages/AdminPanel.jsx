@@ -8,7 +8,7 @@ import './AdminPanel.css';
 import './profile.css';
 import { PortfolioCMS } from './CMSAdmin';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : '');
 
 
 const ORDER_STATUS_WEIGHT = { pending: 0, delivered: 1, completed: 2, cancelled: 3 };
@@ -640,6 +640,7 @@ const AdminPanel = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    sessionStorage.clear();
     window.dispatchEvent(new Event('auth-changed'));
     window.location.href = '/login';
   };

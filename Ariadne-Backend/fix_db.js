@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/ariadne').then(async () => {
+const dotenv = require('dotenv');
+dotenv.config();
+
+mongoose.connect(process.env.DB_URL).then(async () => {
   const Project = require('./models/Project');
   const projects = await Project.find({ 'media.url': /<div/ });
   for (const p of projects) {

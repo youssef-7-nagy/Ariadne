@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const path = require('path');
 
-// Use the .env from the backend
-dotenv.config({ path: path.join(__dirname, '..', 'Ariadne-Backend', '.env') });
+// Load .env from the same directory as this script
+dotenv.config();
 
 async function checkUsers() {
     try {

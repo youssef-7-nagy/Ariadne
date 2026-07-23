@@ -6,16 +6,18 @@ import "./Login.css";
 
 import {
     FaGoogle, FaFacebookF, FaApple,
-    FaUser, FaEnvelope, FaLock, FaPhone
+    FaUser, FaEnvelope, FaLock, FaPhone, FaEye, FaEyeSlash
 } from "react-icons/fa";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : '');
 
 const EMAIL_USED_MESSAGE = "This email is already used. Please sign in instead.";
 
 const Login = () => {
     const [isActive, setIsActive] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [showRegPassword, setShowRegPassword] = useState(false);
+    const [showLoginPassword, setShowLoginPassword] = useState(false);
     const navigate = useNavigate();
 
     const regNameRef = useRef(null);
@@ -60,9 +62,9 @@ const Login = () => {
 
             setTimeout(() => {
                 if (user && user.role === 'admin') {
-                    navigate("/admin");
+                    window.location.href = "/admin";
                 } else {
-                    navigate("/profile");
+                    window.location.href = "/profile";
                 }
             }, 100);
         } catch (err) {
@@ -104,9 +106,9 @@ const Login = () => {
             notify.success("Success - Login successful!");
             setTimeout(() => {
                 if (user && user.role === 'admin') {
-                    navigate("/admin");
+                    window.location.href = "/admin";
                 } else {
-                    navigate("/profile");
+                    window.location.href = "/profile";
                 }
             }, 100);
         } catch (err) {
@@ -165,8 +167,19 @@ const Login = () => {
                             <FaEnvelope className="input-icon" />
                         </div>
                         <div className="input-wrapper">
-                            <input type="password" placeholder="Password" ref={regPasswordRef} required />
+                            <input 
+                                type={showRegPassword ? "text" : "password"} 
+                                placeholder="Password" 
+                                ref={regPasswordRef} 
+                                required 
+                                className="password-input"
+                            />
                             <FaLock className="input-icon" />
+                            {showRegPassword ? (
+                                <FaEyeSlash className="input-icon-right clickable-icon" onClick={() => setShowRegPassword(false)} />
+                            ) : (
+                                <FaEye className="input-icon-right clickable-icon" onClick={() => setShowRegPassword(true)} />
+                            )}
                         </div>
                         <button type="submit" disabled={isLoading}>{isLoading ? "Loading..." : "Sign Up"}</button>
 
@@ -192,8 +205,19 @@ const Login = () => {
                             <FaEnvelope className="input-icon" />
                         </div>
                         <div className="input-wrapper">
-                            <input type="password" placeholder="Password" ref={loginPasswordRef} required />
+                            <input 
+                                type={showLoginPassword ? "text" : "password"} 
+                                placeholder="Password" 
+                                ref={loginPasswordRef} 
+                                required 
+                                className="password-input"
+                            />
                             <FaLock className="input-icon" />
+                            {showLoginPassword ? (
+                                <FaEyeSlash className="input-icon-right clickable-icon" onClick={() => setShowLoginPassword(false)} />
+                            ) : (
+                                <FaEye className="input-icon-right clickable-icon" onClick={() => setShowLoginPassword(true)} />
+                            )}
                         </div>
 
                         <a href="/forgot-password" style={{ marginTop: "15px", marginBottom: "10px" }}>

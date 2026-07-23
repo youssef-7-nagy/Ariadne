@@ -21,7 +21,7 @@ if (isConfigured) {
       };
     },
   });
-  console.log('✅ Multer configured with CloudinaryStorage.');
+  console.log('[OK] Multer configured with CloudinaryStorage.');
 } else {
   storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, path.join(__dirname, '../uploads')),
@@ -30,16 +30,21 @@ if (isConfigured) {
       cb(null, `${unique}${path.extname(file.originalname)}`);
     }
   });
-  console.log('⚠️ Multer configured with Local diskStorage.');
+  console.log('[WARN] Multer configured with Local diskStorage.');
 }
 
 const uploadService = multer({
   storage,
   limits: { fileSize: 3 * 1024 * 1024 * 1024 }, // 3 GB
   fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp|mp4|mov|avi|webm|mkv|m4v|hevc/;
+    const allowed = /jpeg|jpg|png|gif|webp|avif|heic|mp4|mov|avi|webm|mkv|m4v|hevc/;
     const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
-    allowed.test(ext) ? cb(null, true) : cb(new Error('Only images and videos are allowed'));
+    if (allowed.test(ext)) {
+      cb(null, true);
+    } else {
+      console.warn(`[UploadService] Rejected file with unsupported extension: .${ext} (${file.originalname})`);
+      cb(new Error(`Only images and videos are allowed (received .${ext})`));
+    }
   }
 });
 

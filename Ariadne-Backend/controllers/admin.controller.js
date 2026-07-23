@@ -18,7 +18,15 @@ exports.getCategories = async (req, res) => {
 exports.createCategory = async (req, res) => {
   try {
     const { name, slug, description } = req.body;
-    const coverImage = req.file ? req.file.path : undefined;
+    // req.file.path is the full OS path on local disk; we need the URL-friendly path.
+    // If using Cloudinary, path is already a full https:// URL. If using local disk,
+    // path is an OS filepath — convert it to a relative /uploads/... URL.
+    const fileToUrl = (file) => {
+      if (!file) return undefined;
+      if (file.path.startsWith('http')) return file.path; // Cloudinary URL
+      return `/uploads/${file.filename}`;                  // local disk -> relative URL
+    };
+    const coverImage = fileToUrl(req.file);
     const category = new Category({ name, slug, description, ...(coverImage && { coverImage }) });
     await category.save();
     res.status(201).json({ success: true, data: category });
@@ -31,7 +39,11 @@ exports.updateCategory = async (req, res) => {
   try {
     const { name, slug, description } = req.body;
     const update = { name, slug, description };
-    if (req.file) update.coverImage = req.file.path;
+    if (req.file) {
+      update.coverImage = req.file.path.startsWith('http')
+        ? req.file.path                     // Cloudinary URL
+        : `/uploads/${req.file.filename}`;  // local disk -> relative URL
+    }
     const category = await Category.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: true });
     if (!category) return res.status(404).json({ success: false, message: 'Category not found' });
     res.json({ success: true, data: category });
@@ -109,8 +121,20 @@ exports.createProject = async (req, res) => {
   try {
     const { title, slug, categoryId, description, date, clientName, tags, externalLink, mediaType } = req.body;
 
+    // ── Diagnostic logging (visible in Hostinger Node.js logs) ──────────────
+    console.log(`[createProject] Received files:`, JSON.stringify(
+      req.files ? Object.fromEntries(Object.entries(req.files).map(([k, v]) => [
+        k, v.map(f => ({ name: f.originalname, size: f.size, mime: f.mimetype, path: f.path, filename: f.filename }))
+      ])) : null
+    ));
+    console.log(`[createProject] Body fields: title=${title}, slug=${slug}, categoryId=${categoryId}`);
+    // ────────────────────────────────────────────────────────────────────────
+
     const media = processMedia(req.files, req.body);
     const coverImage = processCoverImage(req.files);
+
+    console.log(`[createProject] Resolved coverImage URL: ${coverImage || 'none'}`);
+    console.log(`[createProject] Resolved media:`, JSON.stringify(media));
 
     const project = new Project({
       title, slug,
@@ -132,6 +156,14 @@ exports.createProject = async (req, res) => {
 exports.updateProject = async (req, res) => {
   try {
     const { title, slug, categoryId, description, date, clientName, tags, externalLink, mediaType } = req.body;
+
+    // ── Diagnostic logging ──────────────────────────────────────────────────
+    console.log(`[updateProject] id=${req.params.id} | files:`, JSON.stringify(
+      req.files ? Object.fromEntries(Object.entries(req.files).map(([k, v]) => [
+        k, v.map(f => ({ name: f.originalname, size: f.size, path: f.path, filename: f.filename }))
+      ])) : null
+    ));
+    // ────────────────────────────────────────────────────────────────────────
 
     const update = {
       title, slug,
