@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css';
+import StaggeredStoryShowcase from '../components/StaggeredStoryShowcase';
 import imgShortFilms from '../assets/categories/short-films.png';
 import imgDocumentaries from '../assets/categories/documentaries.png';
 import imgCommercials from '../assets/categories/commercials.png';
@@ -131,6 +132,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Section 2: Staggered Mobile Story Showcase */}
+            <StaggeredStoryShowcase />
 
 
 

@@ -1,0 +1,361 @@
+/* =============================================
+   Staggered Mobile Story Showcase
+   ============================================= */
+.staggered-showcase-section {
+    padding: 100px 0 120px;
+    background: linear-gradient(180deg, #bbd5fb 0%, #c4dbfd 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Header */
+.staggered-section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+}
+
+.staggered-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #1e3a8a;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.staggered-section-header h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+}
+
+.staggered-section-header h2 span {
+    color: #ff4e00;
+}
+
+.staggered-section-header p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    color: #334155;
+    line-height: 1.6;
+}
+
+/* Stage & Grid Wrapper */
+.staggered-stage-wrapper {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+.staggered-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+/* Base Mobile Card Frame */
+.staggered-card {
+    position: relative;
+    border-radius: 36px;
+    border: 3.5px solid #0f172a;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.16);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+    cursor: pointer;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+}
+
+.staggered-card:hover {
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.25);
+    z-index: 10;
+}
+
+/* Staggered Vertical Offsets (Matching the reference photo) */
+.card-frame-1 {
+    transform: translateY(20px);
+    background: #e8a86a;
+}
+.card-frame-1:hover {
+    transform: translateY(10px) scale(1.03);
+}
+
+.card-frame-2 {
+    transform: translateY(-40px);
+    background: #3e502a;
+    color: #ffffff;
+}
+.card-frame-2:hover {
+    transform: translateY(-50px) scale(1.03);
+}
+
+.card-frame-3 {
+    transform: translateY(0px);
+    background: #ffffff;
+    color: #0f172a;
+}
+.card-frame-3:hover {
+    transform: translateY(-10px) scale(1.03);
+}
+
+.card-frame-4 {
+    transform: translateY(50px);
+    background: #f7eedd;
+    color: #1e293b;
+}
+.card-frame-4:hover {
+    transform: translateY(40px) scale(1.03);
+}
+
+.card-frame-5 {
+    transform: translateY(-60px);
+    background: #fbf3e6;
+    color: #1e293b;
+}
+.card-frame-5:hover {
+    transform: translateY(-70px) scale(1.03);
+}
+
+.card-frame-6 {
+    transform: translateY(30px);
+    background: #89b5fc;
+    color: #1d4ed8;
+}
+.card-frame-6:hover {
+    transform: translateY(20px) scale(1.03);
+}
+
+/* Inner Card Content Padding */
+.card-inner-padded {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+/* Image rounded shapes inside cards */
+.card-img-rounded {
+    width: 100%;
+    height: 240px;
+    border-radius: 28px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.card-img-rounded img,
+.card-top-img img,
+.card-thumb-rounded img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #0f172a;
+    opacity: 0.7;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.card-text-block h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #0f172a;
+    margin-top: 12px;
+}
+
+.card-subtext {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0f172a;
+    opacity: 0.6;
+    margin-top: 24px;
+}
+
+/* Card 2: Dark Theme Details */
+.card-theme-dark .card-header-divider {
+    width: 100%;
+    height: 1px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.3);
+    margin-bottom: 24px;
+}
+.card-theme-dark h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #ffffff;
+}
+.card-body-text {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    opacity: 0.85;
+}
+.card-footer-tag {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+/* Card 3: Center Spotlight */
+.card-top-img {
+    width: 100%;
+    height: 190px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.card-content-area h3 {
+    font-size: 1.25rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+.card-meta-row {
+    display: flex;
+    gap: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+.card-excerpt {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: #475569;
+}
+
+/* Card 4: Cream Thumbnail */
+.card-theme-cream h4 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 16px;
+}
+.card-thumb-rounded {
+    width: 100%;
+    height: 160px;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.card-date {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748b;
+}
+.card-bottom-info h5 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 4px;
+}
+
+/* Card 5: Typography Poster */
+.card-eyebrow-sm {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #64748b;
+}
+.card-bold-heading {
+    font-size: 1.7rem;
+    font-weight: 900;
+    line-height: 1.1;
+    color: #0f172a;
+    margin: 16px 0 24px;
+}
+.card-nav-links {
+    display: flex;
+    gap: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 20px;
+}
+.card-social-icons {
+    display: flex;
+    gap: 14px;
+    font-size: 1.1rem;
+}
+
+/* Card 6: Blue Monogram */
+.card-top-nav {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+.card-brand-title h2 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    line-height: 1.05;
+    color: #1d4ed8;
+}
+.card-illustration-icon {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* ─── RESPONSIVE BREAKPOINTS ─── */
+@media (max-width: 1200px) {
+    .staggered-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+    .staggered-card {
+        transform: none !important;
+        min-height: 420px;
+    }
+    .staggered-card:hover {
+        transform: translateY(-8px) scale(1.02) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .staggered-showcase-section {
+        padding: 60px 0 80px;
+    }
+    .staggered-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    .staggered-card {
+        min-height: 380px;
+        border-radius: 28px;
+        border-width: 2.5px;
+    }
+}
+
+@media (max-width: 500px) {
+    .staggered-grid {
+        grid-template-columns: 1fr;
+        max-width: 340px;
+        margin: 0 auto;
+    }
+}
