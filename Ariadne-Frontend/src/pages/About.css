@@ -618,6 +618,28 @@ html.dark .partner-card {
     }
 }
 
+/* =============================================
+   Trusted Partners Interactive Grid (White Bg)
+   ============================================= */
+.about-partners {
+    padding: 100px 0 120px;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.about-partners-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.interactive-partners-stage {
+    margin-top: 48px;
+    width: 100%;
+}
+
 @media (max-width: 375px) {
     .about-hero {
         padding: 80px 15px 40px;

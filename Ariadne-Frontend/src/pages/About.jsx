@@ -2,6 +2,7 @@ import React from 'react';
 import './About.css';
 import aboutStory from '../assets/about-story.jpg';
 import CoverflowGallery from '../components/CoverflowGallery';
+import InteractiveGrid from '../components/InteractiveGrid';
 
 // Import logos from assets/trusted leaders
 import logoBasha from '../assets/trusted leaders/Basha.png';
@@ -231,7 +232,7 @@ const About = () => {
                 </div>
             </section>
 
-            {/* ── 3D Glassmorphic Partners Carousel ── */}
+            {/* ── Interactive Grid Partners (White Background) ── */}
             <section className="about-partners">
                 <div className="about-partners-inner">
                     <div className="about-section-header">
@@ -242,37 +243,21 @@ const About = () => {
                         </p>
                     </div>
 
-                    <div className="partners-carousel-wrap">
-                        <div
-                            className="partners-inner"
-                            style={{ '--quantity': PARTNERS.length }}
-                        >
-                            {PARTNERS.map((partner, i) => (
-                                <div
-                                    key={i}
-                                    className="partner-card glass-card"
-                                    style={{
-                                        '--index': i,
-                                        '--color-card': partner.color,
-                                    }}
-                                >
-                                    <div className="partner-img">
-                                        {partner.logo ? (
-                                            <img 
-                                                src={partner.logo} 
-                                                alt={partner.name} 
-                                                style={partner.contain ? { objectFit: 'contain', padding: partner.padding || '15px' } : {}}
-                                            />
-                                        ) : (
-                                            <span className="text-logo">
-                                                {partner.letter}
-                                            </span>
-                                        )}
-                                        <div className="partner-glow"></div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="interactive-partners-stage">
+                        <InteractiveGrid
+                            images={PARTNERS.map(p => p.logo).filter(Boolean)}
+                            columns={5}
+                            rows={3}
+                            gap={14}
+                            rounded={14}
+                            cardFill="#ffffff"
+                            cardBorder="rgba(0, 0, 0, 0.08)"
+                            shadow={true}
+                            glow={true}
+                            glowStart="rgba(255, 78, 0, 0.25)"
+                            glowEnd="#ff4e00"
+                            glowIntensity={40}
+                        />
                     </div>
                 </div>
             </section>
