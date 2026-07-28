@@ -34,14 +34,8 @@ const CSS = `
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 .${NS}-card img {
-  opacity: 0.8;
-  transition: opacity ${DURATION}ms ease, filter ${DURATION}ms ease;
-}
-.${NS}-card:hover {
-  border-color: rgba(255, 78, 0, 0.35) !important;
-}
-.${NS}-card:hover img {
   opacity: 1;
+  transition: transform ${DURATION}ms ease;
 }
 
 .${NS}-small {
