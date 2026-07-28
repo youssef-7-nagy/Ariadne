@@ -13,98 +13,116 @@ const StaggeredStoryShowcase = () => {
             <div className="staggered-stage-wrapper">
                 <div className="staggered-grid">
 
-                    {/* Frame 1: Full-bleed Hero Story (Offset High) */}
-                    <div className="staggered-card card-frame-1">
-                        <div className="card-inner-padded">
-                            <div className="card-img-rounded">
-                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop" alt="East Coast Expedition" />
+                    {/* Phone 1: Far Left - Orange Background Phone */}
+                    <div className="mobile-phone-frame phone-1">
+                        <div className="phone-screen phone-orange">
+                            <div className="phone-top-bg-img">
+                                <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=800&auto=format&fit=crop" alt="Desert" />
                             </div>
-                            <div className="card-text-block">
-                                <span className="card-badge">FEATURED STORY</span>
-                                <h3>Wild Camping Along Tasmania's Coast</h3>
-                                <p className="card-subtext">Scroll for more ↓</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Frame 2: Dark Editorial Statement (Offset Low) */}
-                    <div className="staggered-card card-frame-2 card-theme-dark">
-                        <div className="card-inner-padded">
-                            <div className="card-header-divider"></div>
-                            <h3>About Ariadne</h3>
-                            <p className="card-body-text">
-                                We are slow visual travelers with a soft spot for quiet moments, raw lighting, and unscripted stories that don't make the guidebooks.
-                            </p>
-                            <p className="card-footer-tag">Currently roaming. Always searching.</p>
-                        </div>
-                    </div>
-
-                    {/* Frame 3: Center Spotlight Article (Offset High) */}
-                    <div className="staggered-card card-frame-3 card-theme-light">
-                        <div className="card-inner-padded">
-                            <div className="card-top-img">
-                                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=800&auto=format&fit=crop" alt="Tasmania" />
-                            </div>
-                            <div className="card-content-area">
+                            <div className="phone-white-inset-card">
+                                <div className="inset-img-pill">
+                                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop" alt="Coastal Road" />
+                                </div>
+                                <span className="phone-meta-label">Featured article</span>
                                 <h3>Wild Camping Along Tasmania's East Coast</h3>
-                                <div className="card-meta-row">
-                                    <span>📅 July 11, 2026</span>
+                            </div>
+                            <div className="phone-bottom-scroll">
+                                <span>Scroll for more</span>
+                                <span className="arrow-down">↓</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Phone 2: Top Left - Dark Olive Phone */}
+                    <div className="mobile-phone-frame phone-2">
+                        <div className="phone-screen phone-olive">
+                            <div className="phone-curved-top-img">
+                                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop" alt="Landscape" />
+                            </div>
+                            <div className="phone-padded-content">
+                                <div className="phone-dashed-divider"></div>
+                                <h2>About</h2>
+                                <p className="phone-bio-text">
+                                    Hi, I'm Naiá — a slow traveler with a soft spot for train stations, street snacks, and places that don't make the guidebooks. The Roam Report is my way of remembering: the long walks, wrong turns, and all the quiet in-between moments that make a place feel real.
+                                </p>
+                                <p className="phone-footer-note">Currently roaming. Eventually home.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Phone 3: Center Main - Tall White Phone */}
+                    <div className="mobile-phone-frame phone-3">
+                        <div className="phone-screen phone-white">
+                            <div className="phone-main-header-img">
+                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop" alt="Tasmania Coast" />
+                            </div>
+                            <div className="phone-article-body">
+                                <h2>Wild Camping Along Tasmania's East Coast</h2>
+                                <div className="phone-article-meta">
+                                    <span>📅 July 11, 2025</span>
                                     <span>📍 Australia</span>
                                 </div>
-                                <p className="card-excerpt">
-                                    The coast of Tasmania doesn't care where you came from. It just opens up—wild, wind-lashed, and utterly indifferent...
+                                <div className="phone-dashed-divider light"></div>
+                                <p className="phone-article-text">
+                                    The coast of Tasmania doesn't care where you came from. It just opens up—wild, wind-lashed, and utterly indifferent. I parked the camper by a cliff's edge one afternoon, unsure if I'd stay one night or three. I stayed four. Each morning I woke to the sound of the ocean...
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Frame 4: Recent Stories Thumbnail (Offset Low) */}
-                    <div className="staggered-card card-frame-4 card-theme-cream">
-                        <div className="card-inner-padded">
-                            <h4>Latest travel stories</h4>
-                            <div className="card-thumb-rounded">
-                                <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=800&auto=format&fit=crop" alt="Desert Dunes" />
-                            </div>
-                            <div className="card-bottom-info">
-                                <span className="card-date">September 17, 2026</span>
-                                <h5>Driving Across Sahara Dunes</h5>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Frame 5: Modern Typography Poster (Offset High) */}
-                    <div className="staggered-card card-frame-5 card-theme-warm">
-                        <div className="card-inner-padded">
-                            <span className="card-eyebrow-sm">END OF THE TRAIL</span>
-                            <h2 className="card-bold-heading">Less rush.<br />More wonder.</h2>
-                            <div className="card-nav-links">
-                                <span>Home</span>
-                                <span>Articles</span>
-                                <span>About</span>
-                                <span>Contact</span>
-                            </div>
-                            <div className="card-social-icons">
-                                <span>📷</span>
-                                <span>📌</span>
-                                <span>▶</span>
-                                <span>𝕏</span>
+                    {/* Phone 4: Bottom Center - Light Cream Phone */}
+                    <div className="mobile-phone-frame phone-4">
+                        <div className="phone-screen phone-cream">
+                            <div className="phone-padded-content">
+                                <h3 className="phone-section-title">Latest travel stories</h3>
+                                <div className="phone-oval-img">
+                                    <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=800&auto=format&fit=crop" alt="Desert Drive" />
+                                </div>
+                                <span className="phone-date-tag">September 17, 2025</span>
+                                <h4>Driving Across Monument Valley</h4>
                             </div>
                         </div>
                     </div>
 
-                    {/* Frame 6: Bold Brand Monogram (Offset Low) */}
-                    <div className="staggered-card card-frame-6 card-theme-blue">
-                        <div className="card-inner-padded">
-                            <div className="card-top-nav">
+                    {/* Phone 5: Top Right - Warm Beige Poster Phone */}
+                    <div className="mobile-phone-frame phone-5">
+                        <div className="phone-screen phone-warm-beige">
+                            <div className="phone-wavy-top-img">
+                                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=800&auto=format&fit=crop" alt="Trail" />
+                            </div>
+                            <div className="phone-poster-content">
+                                <span className="phone-eyebrow-text">End of the trail</span>
+                                <h1>Less rush.<br />More wonder.</h1>
+                                <div className="phone-nav-row">
+                                    <span>Home</span>
+                                    <span>Articles</span>
+                                    <span>About</span>
+                                    <span>Contact</span>
+                                </div>
+                                <div className="phone-social-row">
+                                    <span>📷</span>
+                                    <span>📌</span>
+                                    <span>▶</span>
+                                    <span>𝕏</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Phone 6: Bottom Right - Light Blue Phone */}
+                    <div className="mobile-phone-frame phone-6">
+                        <div className="phone-screen phone-light-blue">
+                            <div className="phone-top-pill-nav">
                                 <span>Home</span>
                                 <span>Articles</span>
-                                <span>About</span>
+                                <span className="active-nav">About</span>
                             </div>
-                            <div className="card-brand-title">
-                                <h2>The Roam<br />Report</h2>
+                            <div className="phone-hero-title">
+                                <h1>The Roam<br />Report</h1>
                             </div>
-                            <div className="card-illustration-icon">
-                                🚂 ✨ 📷
+                            <div className="phone-illustration-art">
+                                <div className="hand-drawn-icon">📷</div>
+                                <div className="hand-drawn-sparkle">✨</div>
                             </div>
                         </div>
                     </div>

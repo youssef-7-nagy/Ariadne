@@ -1,9 +1,9 @@
 /* =============================================
-   Staggered Mobile Story Showcase
+   Staggered Smartphone Story Showcase
    ============================================= */
 .staggered-showcase-section {
-    padding: 100px 0 120px;
-    background: linear-gradient(180deg, #bbd5fb 0%, #c4dbfd 100%);
+    padding: 100px 0 140px;
+    background: linear-gradient(180deg, #c5d8f6 0%, #baccf5 100%);
     position: relative;
     overflow: hidden;
 }
@@ -12,13 +12,13 @@
 .staggered-section-header {
     text-align: center;
     max-width: 700px;
-    margin: 0 auto 60px;
+    margin: 0 auto 70px;
     padding: 0 20px;
 }
 
 .staggered-eyebrow {
     font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 3px;
     color: #1e3a8a;
@@ -29,11 +29,11 @@
 
 .staggered-section-header h2 {
     font-family: 'Montserrat', sans-serif;
-    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-size: clamp(2.2rem, 3.8vw, 3rem);
     font-weight: 900;
     color: #0f172a;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
     margin-bottom: 16px;
 }
 
@@ -50,187 +50,237 @@
 
 /* Stage & Grid Wrapper */
 .staggered-stage-wrapper {
-    max-width: 1360px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 20px 24px;
     position: relative;
 }
 
 .staggered-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 20px;
+    gap: 22px;
     align-items: start;
 }
 
-/* Base Mobile Card Frame */
-.staggered-card {
+/* Smartphone Frame Base (Matching Photo 2) */
+.mobile-phone-frame {
     position: relative;
-    border-radius: 36px;
-    border: 3.5px solid #0f172a;
+    width: 100%;
+    height: 640px;
+    border-radius: 44px;
+    border: 4px solid #000000;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.16);
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.18);
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
     cursor: pointer;
-    min-height: 480px;
-    display: flex;
-    flex-direction: column;
+    background: #ffffff;
 }
 
-.staggered-card:hover {
-    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.25);
+.mobile-phone-frame:hover {
+    box-shadow: 0 35px 80px rgba(15, 23, 42, 0.28);
     z-index: 10;
 }
 
-/* Staggered Vertical Offsets (Matching the reference photo) */
-.card-frame-1 {
-    transform: translateY(20px);
-    background: #e8a86a;
+/* Vertical Stagger Offsets matching Reference Photo 2 */
+.phone-1 {
+    transform: translateY(40px);
 }
-.card-frame-1:hover {
-    transform: translateY(10px) scale(1.03);
-}
-
-.card-frame-2 {
-    transform: translateY(-40px);
-    background: #3e502a;
-    color: #ffffff;
-}
-.card-frame-2:hover {
-    transform: translateY(-50px) scale(1.03);
+.phone-1:hover {
+    transform: translateY(28px) scale(1.03);
 }
 
-.card-frame-3 {
-    transform: translateY(0px);
-    background: #ffffff;
-    color: #0f172a;
+.phone-2 {
+    transform: translateY(-70px);
 }
-.card-frame-3:hover {
-    transform: translateY(-10px) scale(1.03);
+.phone-2:hover {
+    transform: translateY(-82px) scale(1.03);
 }
 
-.card-frame-4 {
+.phone-3 {
+    transform: translateY(10px);
+}
+.phone-3:hover {
+    transform: translateY(-2px) scale(1.03);
+}
+
+.phone-4 {
+    transform: translateY(80px);
+}
+.phone-4:hover {
+    transform: translateY(68px) scale(1.03);
+}
+
+.phone-5 {
+    transform: translateY(-80px);
+}
+.phone-5:hover {
+    transform: translateY(-92px) scale(1.03);
+}
+
+.phone-6 {
     transform: translateY(50px);
-    background: #f7eedd;
-    color: #1e293b;
 }
-.card-frame-4:hover {
-    transform: translateY(40px) scale(1.03);
+.phone-6:hover {
+    transform: translateY(38px) scale(1.03);
 }
 
-.card-frame-5 {
-    transform: translateY(-60px);
-    background: #fbf3e6;
-    color: #1e293b;
-}
-.card-frame-5:hover {
-    transform: translateY(-70px) scale(1.03);
-}
-
-.card-frame-6 {
-    transform: translateY(30px);
-    background: #89b5fc;
-    color: #1d4ed8;
-}
-.card-frame-6:hover {
-    transform: translateY(20px) scale(1.03);
-}
-
-/* Inner Card Content Padding */
-.card-inner-padded {
-    padding: 24px 20px;
+/* Phone Screen Base */
+.phone-screen {
+    width: 100%;
+    height: 100%;
+    position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
+    overflow: hidden;
     box-sizing: border-box;
 }
 
-/* Image rounded shapes inside cards */
-.card-img-rounded {
-    width: 100%;
-    height: 240px;
-    border-radius: 28px;
-    overflow: hidden;
-    margin-top: 10px;
+/* Phone 1: Orange Theme */
+.phone-orange {
+    background: #e59d5c;
+    color: #1e293b;
+    justify-content: space-between;
 }
-.card-img-rounded img,
-.card-top-img img,
-.card-thumb-rounded img {
+.phone-top-bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    overflow: hidden;
+    opacity: 0.85;
+}
+.phone-top-bg-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
 }
-
-.card-badge {
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #0f172a;
-    opacity: 0.7;
-    margin-bottom: 6px;
-    display: block;
+.phone-white-inset-card {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    border-radius: 28px;
+    margin: 120px 16px 0;
+    padding: 14px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
 }
-
-.card-text-block h3 {
-    font-size: 1.15rem;
-    font-weight: 800;
-    line-height: 1.25;
-    color: #0f172a;
-    margin-top: 12px;
-}
-
-.card-subtext {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #0f172a;
-    opacity: 0.6;
-    margin-top: 24px;
-}
-
-/* Card 2: Dark Theme Details */
-.card-theme-dark .card-header-divider {
+.inset-img-pill {
     width: 100%;
-    height: 1px;
-    border-top: 1px dashed rgba(255, 255, 255, 0.3);
-    margin-bottom: 24px;
-}
-.card-theme-dark h3 {
-    font-size: 1.4rem;
-    font-weight: 800;
+    height: 170px;
+    border-radius: 24px;
+    overflow: hidden;
     margin-bottom: 12px;
+}
+.inset-img-pill img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.phone-meta-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.phone-white-inset-card h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+    margin-top: 4px;
+}
+.phone-bottom-scroll {
+    position: relative;
+    z-index: 2;
+    padding: 20px 16px;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+.arrow-down {
+    display: block;
+    font-size: 0.9rem;
+    margin-top: 2px;
+}
+
+/* Phone 2: Dark Olive Theme */
+.phone-olive {
+    background: #394828;
     color: #ffffff;
 }
-.card-body-text {
-    font-size: 0.88rem;
-    line-height: 1.5;
-    opacity: 0.85;
+.phone-curved-top-img {
+    width: 100%;
+    height: 130px;
+    overflow: hidden;
 }
-.card-footer-tag {
-    font-size: 0.75rem;
-    opacity: 0.6;
+.phone-curved-top-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-bottom-left-radius: 50% 30px;
+    border-bottom-right-radius: 50% 30px;
+}
+.phone-padded-content {
+    padding: 20px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.phone-dashed-divider {
+    width: 100%;
+    border-top: 1px dashed rgba(255, 255, 255, 0.35);
+    margin-bottom: 20px;
+}
+.phone-dashed-divider.light {
+    border-top-color: rgba(0, 0, 0, 0.12);
+}
+.phone-olive h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+.phone-bio-text {
+    font-size: 0.84rem;
+    line-height: 1.55;
+    opacity: 0.88;
+}
+.phone-footer-note {
     margin-top: auto;
+    font-size: 0.75rem;
+    opacity: 0.65;
     padding-top: 20px;
 }
 
-/* Card 3: Center Spotlight */
-.card-top-img {
-    width: 100%;
-    height: 190px;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 16px;
+/* Phone 3: White Center Spotlight */
+.phone-white {
+    background: #ffffff;
+    color: #0f172a;
 }
-.card-content-area h3 {
+.phone-main-header-img {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+}
+.phone-main-header-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.phone-article-body {
+    padding: 20px;
+}
+.phone-article-body h2 {
     font-size: 1.25rem;
     font-weight: 900;
-    line-height: 1.2;
     color: #0f172a;
+    line-height: 1.2;
     margin-bottom: 10px;
 }
-.card-meta-row {
+.phone-article-meta {
     display: flex;
     gap: 12px;
     font-size: 0.75rem;
@@ -238,101 +288,150 @@
     color: #64748b;
     margin-bottom: 12px;
 }
-.card-excerpt {
+.phone-article-text {
     font-size: 0.82rem;
     line-height: 1.55;
-    color: #475569;
+    color: #334155;
 }
 
-/* Card 4: Cream Thumbnail */
-.card-theme-cream h4 {
+/* Phone 4: Cream Theme */
+.phone-cream {
+    background: #f5ede0;
+    color: #0f172a;
+}
+.phone-section-title {
     font-size: 1.2rem;
     font-weight: 800;
     color: #0f172a;
     margin-bottom: 16px;
 }
-.card-thumb-rounded {
+.phone-oval-img {
     width: 100%;
-    height: 160px;
-    border-radius: 24px;
+    height: 190px;
+    border-radius: 28px;
     overflow: hidden;
     margin-bottom: 16px;
 }
-.card-date {
+.phone-oval-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.phone-date-tag {
     font-size: 0.72rem;
     font-weight: 600;
     color: #64748b;
 }
-.card-bottom-info h5 {
-    font-size: 1.05rem;
+.phone-cream h4 {
+    font-size: 1.08rem;
     font-weight: 800;
     color: #0f172a;
     margin-top: 4px;
 }
 
-/* Card 5: Typography Poster */
-.card-eyebrow-sm {
+/* Phone 5: Warm Beige Poster Theme */
+.phone-warm-beige {
+    background: #f7ebe1;
+    color: #0f172a;
+}
+.phone-wavy-top-img {
+    width: 100%;
+    height: 130px;
+    overflow: hidden;
+}
+.phone-wavy-top-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.phone-poster-content {
+    padding: 24px 20px;
+    text-align: center;
+}
+.phone-eyebrow-text {
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 1px;
     color: #64748b;
+    text-transform: uppercase;
 }
-.card-bold-heading {
-    font-size: 1.7rem;
+.phone-poster-content h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.85rem;
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.08;
     color: #0f172a;
     margin: 16px 0 24px;
 }
-.card-nav-links {
+.phone-nav-row {
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
     font-size: 0.75rem;
     font-weight: 600;
     color: #475569;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
-.card-social-icons {
+.phone-social-row {
     display: flex;
-    gap: 14px;
-    font-size: 1.1rem;
+    justify-content: center;
+    gap: 16px;
+    font-size: 1.15rem;
 }
 
-/* Card 6: Blue Monogram */
-.card-top-nav {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #1d4ed8;
-    background: rgba(255, 255, 255, 0.6);
-    padding: 6px 12px;
-    border-radius: 20px;
-    margin-bottom: 30px;
+/* Phone 6: Light Blue Theme */
+.phone-light-blue {
+    background: #90b8f8;
+    color: #1e3a8a;
+    padding: 20px;
 }
-.card-brand-title h2 {
-    font-size: 2.2rem;
+.phone-top-pill-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 40px;
+}
+.active-nav {
+    background: #ffffff;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.phone-hero-title h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.3rem;
     font-weight: 900;
     line-height: 1.05;
-    color: #1d4ed8;
+    color: #1e3a8a;
+    margin-top: 30px;
 }
-.card-illustration-icon {
-    font-size: 2.5rem;
-    text-align: center;
+.phone-illustration-art {
     margin-top: auto;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    font-size: 2.2rem;
+    padding-bottom: 20px;
 }
 
 /* ─── RESPONSIVE BREAKPOINTS ─── */
-@media (max-width: 1200px) {
+@media (max-width: 1300px) {
     .staggered-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 24px;
     }
-    .staggered-card {
+    .mobile-phone-frame {
         transform: none !important;
-        min-height: 420px;
+        height: 580px;
     }
-    .staggered-card:hover {
+    .mobile-phone-frame:hover {
         transform: translateY(-8px) scale(1.02) !important;
     }
 }
@@ -345,10 +444,10 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
     }
-    .staggered-card {
-        min-height: 380px;
-        border-radius: 28px;
-        border-width: 2.5px;
+    .mobile-phone-frame {
+        height: 520px;
+        border-radius: 36px;
+        border-width: 3px;
     }
 }
 
