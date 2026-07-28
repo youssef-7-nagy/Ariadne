@@ -176,6 +176,7 @@ const About = () => {
                             opacity={55}
                             showTitle={true}
                             autoplay={false}
+                            theme="light"
                             transition={{ type: 'tween', duration: 0.6, delay: 3, ease: [0.22, 1, 0.36, 1] }}
                         />
                     </div>

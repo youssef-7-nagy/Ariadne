@@ -645,21 +645,24 @@ html.dark .partner-card {
    ============================================= */
 .about-leaders-coverflow {
     padding: 100px 0 120px;
-    background: #080b14;
+    background: #ffffff;
+    background: radial-gradient(circle at 50% 40%, #fff7f2 0%, #ffffff 75%);
     position: relative;
     overflow: hidden;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Ambient glow background */
+/* Ambient warm spotlight glow background */
 .about-leaders-coverflow::before {
     content: '';
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 800px;
-    height: 500px;
-    background: radial-gradient(ellipse, rgba(255, 78, 0, 0.08) 0%, transparent 70%);
+    width: 900px;
+    height: 550px;
+    background: radial-gradient(ellipse, rgba(255, 78, 0, 0.08) 0%, transparent 65%);
     pointer-events: none;
     z-index: 0;
 }
@@ -672,21 +675,26 @@ html.dark .partner-card {
     z-index: 1;
 }
 
-/* Reuse the shared section header style for dark bg */
+/* Section header for light bg */
 .about-leaders-coverflow .about-section-header {
-    color: #fff;
+    color: #0f172a;
 }
 
 .about-leaders-coverflow .about-section-header h2 {
-    color: #fff;
+    color: #0f172a;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
 .about-leaders-coverflow .about-section-header p {
-    color: rgba(255, 255, 255, 0.55);
+    color: #64748b;
+    font-size: 1.05rem;
 }
 
 .about-leaders-coverflow .about-section-header span {
-    color: #ff4e00;
+    background: linear-gradient(135deg, #ff4e00 0%, #e63900 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Stage that holds the coverflow */

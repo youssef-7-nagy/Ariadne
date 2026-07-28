@@ -50,6 +50,7 @@ export default function CoverflowGallery({
     autoplayDirection = "rightToLeft",
     transition = { type: "tween", duration: 0.6, delay: 2.5, ease: [0.22, 1, 0.36, 1] },
     showTitle = true,
+    theme = "dark",
 }) {
     const list = slides && slides.length ? slides : [];
     const n = list.length;
@@ -209,9 +210,10 @@ export default function CoverflowGallery({
                         top: "50%",
                         transform: "translateY(-50%)",
                         zIndex: 20,
-                        background: "rgba(255,255,255,0.08)",
-                        border: "1px solid rgba(255,255,255,0.18)",
-                        color: "#fff",
+                        background: theme === "light" ? "rgba(0, 0, 0, 0.05)" : "rgba(255, 255, 255, 0.08)",
+                        border: theme === "light" ? "1px solid rgba(0, 0, 0, 0.12)" : "1px solid rgba(255, 255, 255, 0.18)",
+                        color: theme === "light" ? "#0f172a" : "#ffffff",
+                        boxShadow: theme === "light" ? "0 4px 14px rgba(0, 0, 0, 0.08)" : "none",
                         width: arrowSize,
                         height: arrowSize,
                         borderRadius: "50%",
@@ -222,11 +224,19 @@ export default function CoverflowGallery({
                         justifyContent: "center",
                         backdropFilter: "blur(8px)",
                         WebkitBackdropFilter: "blur(8px)",
-                        transition: "background 0.2s, transform 0.2s",
+                        transition: "all 0.25s ease",
                         flexShrink: 0,
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.22)"}
-                    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                    onMouseEnter={e => {
+                        e.currentTarget.style.background = theme === "light" ? "#ff4e00" : "rgba(255,255,255,0.22)";
+                        e.currentTarget.style.color = "#ffffff";
+                        e.currentTarget.style.borderColor = "#ff4e00";
+                    }}
+                    onMouseLeave={e => {
+                        e.currentTarget.style.background = theme === "light" ? "rgba(0, 0, 0, 0.05)" : "rgba(255,255,255,0.08)";
+                        e.currentTarget.style.color = theme === "light" ? "#0f172a" : "#ffffff";
+                        e.currentTarget.style.borderColor = theme === "light" ? "rgba(0, 0, 0, 0.12)" : "rgba(255, 255, 255, 0.18)";
+                    }}
                 >
                     ‹
                 </button>
@@ -274,7 +284,10 @@ export default function CoverflowGallery({
                                     opacity: visible ? 1 : 0,
                                     cursor: autoplay || isActive ? "default" : "pointer",
                                     pointerEvents: visible && !autoplay ? "auto" : "none",
-                                    backgroundColor: "#1a1a1a",
+                                    backgroundColor: theme === "light" ? "#ffffff" : "#1a1a1a",
+                                    boxShadow: theme === "light"
+                                        ? (isActive ? "0 28px 60px -15px rgba(0, 0, 0, 0.22), 0 10px 25px -5px rgba(0, 0, 0, 0.1)" : "0 18px 40px -10px rgba(0, 0, 0, 0.14)")
+                                        : "0 20px 50px rgba(0,0,0,0.5)",
                                     willChange: "transform, opacity",
                                 }}
                             >
@@ -326,7 +339,7 @@ export default function CoverflowGallery({
                                             </div>
                                             {slide.role && (
                                                 <div style={{
-                                                    color: "rgba(255,255,255,0.65)",
+                                                    color: "rgba(255,255,255,0.75)",
                                                     fontSize: isMobile ? 10 : 13,
                                                     fontWeight: 500,
                                                     marginTop: 3,
@@ -365,9 +378,10 @@ export default function CoverflowGallery({
                         top: "50%",
                         transform: "translateY(-50%)",
                         zIndex: 20,
-                        background: "rgba(255,255,255,0.08)",
-                        border: "1px solid rgba(255,255,255,0.18)",
-                        color: "#fff",
+                        background: theme === "light" ? "rgba(0, 0, 0, 0.05)" : "rgba(255, 255, 255, 0.08)",
+                        border: theme === "light" ? "1px solid rgba(0, 0, 0, 0.12)" : "1px solid rgba(255, 255, 255, 0.18)",
+                        color: theme === "light" ? "#0f172a" : "#ffffff",
+                        boxShadow: theme === "light" ? "0 4px 14px rgba(0, 0, 0, 0.08)" : "none",
                         width: arrowSize,
                         height: arrowSize,
                         borderRadius: "50%",
@@ -378,11 +392,19 @@ export default function CoverflowGallery({
                         justifyContent: "center",
                         backdropFilter: "blur(8px)",
                         WebkitBackdropFilter: "blur(8px)",
-                        transition: "background 0.2s",
+                        transition: "all 0.25s ease",
                         flexShrink: 0,
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.22)"}
-                    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                    onMouseEnter={e => {
+                        e.currentTarget.style.background = theme === "light" ? "#ff4e00" : "rgba(255,255,255,0.22)";
+                        e.currentTarget.style.color = "#ffffff";
+                        e.currentTarget.style.borderColor = "#ff4e00";
+                    }}
+                    onMouseLeave={e => {
+                        e.currentTarget.style.background = theme === "light" ? "rgba(0, 0, 0, 0.05)" : "rgba(255,255,255,0.08)";
+                        e.currentTarget.style.color = theme === "light" ? "#0f172a" : "#ffffff";
+                        e.currentTarget.style.borderColor = theme === "light" ? "rgba(0, 0, 0, 0.12)" : "rgba(255, 255, 255, 0.18)";
+                    }}
                 >
                     ›
                 </button>
@@ -407,11 +429,12 @@ export default function CoverflowGallery({
                             height: isMobile ? 6 : 8,
                             borderRadius: 4,
                             border: "none",
-                            background: i === active ? "#ff4e00" : "rgba(255,255,255,0.3)",
+                            background: i === active ? "#ff4e00" : (theme === "light" ? "rgba(15, 23, 42, 0.2)" : "rgba(255,255,255,0.3)"),
                             cursor: "pointer",
                             transition: "all 0.3s ease",
                             padding: 0,
                             flexShrink: 0,
+                            boxShadow: i === active ? "0 2px 8px rgba(255, 78, 0, 0.4)" : "none",
                         }}
                     />
                 ))}
