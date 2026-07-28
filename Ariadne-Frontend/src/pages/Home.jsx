@@ -12,9 +12,7 @@ import imgCorporate from '../assets/categories/corporate.png';
 import imgMusicVideos from '../assets/categories/music-videos.png';
 import imgPhotography from '../assets/categories/photography.png';
 import imgBTS from '../assets/categories/behind-the-scenes.png';
-import section301 from '../assets/home/section301.jpg';
-import section302 from '../assets/home/section302.jpg';
-import section303 from '../assets/home/section303.jpg';
+
 
 const LOCAL_IMAGE_MAP = {
     'short-films': imgShortFilms,
@@ -136,71 +134,7 @@ const Home = () => {
 
 
 
-            {/* Section 3: 3D Diagonal Glass Showcase */}
-            <section className="diagonal-showcase-section">
-                <div className="diagonal-container">
-                    <div className="diagonal-cards-wrapper">
 
-                        {/* Card 1 */}
-                        <div className="diagonal-card card-1">
-                            <img src={section301} alt="Romantic Chipping" className="diagonal-img" />
-                            <div className="dc-gradient-overlay"></div>
-                            <div className="dc-glass-shimmer"></div>
-                            <div className="diagonal-content">
-                                <div className="dc-top-row">
-                                    <span className="dc-tag">Photography</span>
-                                </div>
-                                <div className="diagonal-bottom-area">
-                                    <h2 className="diagonal-title">ROMANTIC<br />CHIPPING</h2>
-                                    <div className="dc-footer">
-                                        <span className="dc-line"></span>
-                                        <span className="dc-label">FEATURED PROJECT</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 2 */}
-                        <div className="diagonal-card card-2">
-                            <img src={section303} alt="The Power of Dreams" className="diagonal-img" />
-                            <div className="dc-gradient-overlay"></div>
-                            <div className="dc-glass-shimmer"></div>
-                            <div className="diagonal-content">
-                                <div className="dc-top-row">
-                                    <span className="dc-tag">Cinematic</span>
-                                </div>
-                                <div className="diagonal-bottom-area">
-                                    <h2 className="diagonal-title">THE POWER<br />OF DREAMS</h2>
-                                    <div className="dc-footer">
-                                        <span className="dc-line"></span>
-                                        <span className="dc-label">CINEMATIC VISION</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 3 */}
-                        <div className="diagonal-card card-3">
-                            <img src={section302} alt="The Drive of Your Life" className="diagonal-img" />
-                            <div className="dc-gradient-overlay"></div>
-                            <div className="dc-glass-shimmer"></div>
-                            <div className="diagonal-content">
-                                <div className="dc-top-row">
-                                    <span className="dc-tag">Commercial</span>
-                                </div>
-                                <div className="diagonal-bottom-area">
-                                    <h2 className="diagonal-title">THE DRIVE<br />OF YOUR LIFE</h2>
-                                    <div className="dc-footer">
-                                        <span className="dc-line"></span>
-                                        <span className="dc-label">COMMERCIAL WORK</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
 
             {/* Section 3.5: Glass Panels Showcase */}
             <section className="glass-panels-section">
