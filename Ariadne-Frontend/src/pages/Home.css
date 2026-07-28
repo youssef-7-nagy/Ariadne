@@ -577,15 +577,15 @@
    Section 3: 3D Diagonal Glass Showcase
    ========================================= */
 .diagonal-showcase-section {
-    padding: 160px 0;
+    padding: 120px 0 160px;
     background: #ffffff;
     overflow: hidden;
     position: relative;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    perspective: 2800px;
-    min-height: 800px;
+    perspective: 2400px;
+    min-height: 860px;
 }
 
 /* Subtle noise texture on the background */
@@ -602,26 +602,27 @@
     width: 100%;
     position: relative;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    padding-left: 5%;
     z-index: 1;
 }
 
+/* Wrapper — strong 3D rotation matching the reference image */
 .diagonal-cards-wrapper {
     position: relative;
     width: 1300px;
     height: 760px;
     transform-style: preserve-3d;
-    transform: rotateX(14deg) rotateY(-28deg) rotateZ(8deg);
+    /* Matches the dramatic diagonal 3D angle in the reference photo */
+    transform: rotateX(14deg) rotateY(-30deg) rotateZ(8deg);
 }
 
 /* ─── BASE CARD ─── */
 .diagonal-card {
     position: absolute;
-    width: 720px;
-    height: 430px;
-    border-radius: 4px;
+    width: 700px;
+    height: 420px;
+    border-radius: 6px;
     overflow: hidden;
     transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
         box-shadow 0.7s ease,
@@ -650,25 +651,28 @@
 }
 
 /* ─── CARD POSITIONS ─── */
+/* Card 1: back — top-left, recedes into distance */
 .card-1 {
     top: 0;
     left: 0;
-    transform: translateZ(-300px);
     z-index: 1;
+    transform: translateZ(-220px);
 }
 
+/* Card 2: mid — overlaps bottom-right of card 1 */
 .card-2 {
-    top: 160px;
-    left: 420px;
-    transform: translateZ(0px);
+    top: 168px;
+    left: 300px;
     z-index: 2;
+    transform: translateZ(0px);
 }
 
+/* Card 3: front — overlaps bottom-right of card 2, closest to viewer */
 .card-3 {
-    top: 320px;
-    left: 840px;
-    transform: translateZ(300px);
+    top: 336px;
+    left: 600px;
     z-index: 3;
+    transform: translateZ(220px);
 }
 
 /* ─── HOVER STATE ─── */
@@ -739,7 +743,7 @@
 .diagonal-content {
     position: absolute;
     inset: 0;
-    padding: 28px 32px;
+    padding: 24px 28px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -747,7 +751,7 @@
     z-index: 3;
 }
 
-/* ─── TOP ROW: tag + index ─── */
+/* ─── TOP ROW: tag badge at top left ─── */
 .dc-top-row {
     display: flex;
     justify-content: space-between;
@@ -756,55 +760,49 @@
 
 .dc-tag {
     font-family: 'Inter', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 3px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.95);
     background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     padding: 5px 12px;
+    border-radius: 3px;
     backdrop-filter: blur(8px);
 }
 
-.dc-index {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.45);
-}
-
-/* ─── TITLE ─── */
+/* ─── TITLE (ROMANTIC CHIPPING / THE POWER OF DREAMS / THE DRIVE OF YOUR LIFE) ─── */
 .diagonal-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: clamp(2rem, 3.2vw, 3rem);
-    font-weight: 900;
-    line-height: 1.05;
-    color: #fff;
+    font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+    font-weight: 800;
+    line-height: 1.12;
+    color: #ffffff;
     margin: 0;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.3px;
+    text-transform: uppercase;
     text-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.6),
-        0 8px 30px rgba(0, 0, 0, 0.3);
+        0 2px 6px rgba(0, 0, 0, 0.7),
+        0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 /* ─── FOOTER ROW ─── */
 .diagonal-bottom-area {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 8px;
 }
 
 .dc-footer {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 .dc-line {
     display: block;
-    width: 28px;
+    width: 20px;
     height: 2px;
     background: #ff4e00;
     flex-shrink: 0;
@@ -812,12 +810,12 @@
 
 .dc-label {
     font-family: 'Inter', sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.52rem;
     font-weight: 800;
-    letter-spacing: 3.5px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.75);
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.65);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* ─── OLD CLASSES (keep empty to not break anything) ─── */
@@ -830,15 +828,21 @@
 .diagonal-bottom-bar {}
 
 /* ─── RESPONSIVE ─── */
+@media (max-width: 1400px) {
+    .diagonal-cards-wrapper {
+        transform: rotateX(14deg) rotateY(-30deg) rotateZ(8deg) scale(0.88);
+    }
+}
+
 @media (max-width: 1200px) {
     .diagonal-cards-wrapper {
-        transform: rotateX(14deg) rotateY(-28deg) rotateZ(5deg) scale(0.82);
+        transform: rotateX(14deg) rotateY(-30deg) rotateZ(8deg) scale(0.72);
     }
 }
 
 @media (max-width: 1024px) {
     .diagonal-cards-wrapper {
-        transform: rotateX(14deg) rotateY(-28deg) rotateZ(5deg) scale(0.68);
+        transform: rotateX(14deg) rotateY(-30deg) rotateZ(8deg) scale(0.58);
     }
 }
 
@@ -854,16 +858,16 @@
         height: auto;
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 16px;
         padding: 0 15px;
     }
 
     .diagonal-card {
         position: relative;
         width: 100%;
-        height: 280px;
-        left: 0;
-        top: 0;
+        height: 220px;
+        left: 0 !important;
+        top: 0 !important;
         transform: none !important;
         border-radius: 8px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -876,7 +880,7 @@
     }
 
     .diagonal-title {
-        font-size: 2rem;
+        font-size: 1.4rem;
     }
 }
 
@@ -933,13 +937,11 @@
     width: 420px;
     height: 300px;
     border-radius: 16px;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.12) 0%,
-        rgba(255, 255, 255, 0.06) 30%,
-        rgba(255, 255, 255, 0.03) 70%,
-        rgba(255, 255, 255, 0.08) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.06) 30%,
+            rgba(255, 255, 255, 0.03) 70%,
+            rgba(255, 255, 255, 0.08) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1.5px solid rgba(255, 255, 255, 0.35);
@@ -951,7 +953,7 @@
         inset 1px 0 0 rgba(255, 255, 255, 0.3),
         inset -1px 0 0 rgba(255, 255, 255, 0.1);
     transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-                box-shadow 0.6s ease;
+        box-shadow 0.6s ease;
     cursor: pointer;
     overflow: hidden;
 }
@@ -980,15 +982,13 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(
-        115deg,
-        transparent 0%,
-        transparent 35%,
-        rgba(255, 255, 255, 0.12) 45%,
-        rgba(255, 255, 255, 0.04) 55%,
-        transparent 65%,
-        transparent 100%
-    );
+    background: linear-gradient(115deg,
+            transparent 0%,
+            transparent 35%,
+            rgba(255, 255, 255, 0.12) 45%,
+            rgba(255, 255, 255, 0.04) 55%,
+            transparent 65%,
+            transparent 100%);
     pointer-events: none;
 }
 
@@ -1000,12 +1000,10 @@
     width: 120px;
     height: 120px;
     border-radius: 16px 0 0 0;
-    background: radial-gradient(
-        circle at 0% 0%,
-        rgba(255, 255, 255, 0.55) 0%,
-        rgba(255, 255, 255, 0.15) 30%,
-        transparent 70%
-    );
+    background: radial-gradient(circle at 0% 0%,
+            rgba(255, 255, 255, 0.55) 0%,
+            rgba(255, 255, 255, 0.15) 30%,
+            transparent 70%);
     pointer-events: none;
 }
 
@@ -1046,11 +1044,9 @@
     left: 5%;
     width: 90%;
     height: 70px;
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.06) 0%,
-        transparent 100%
-    );
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0.06) 0%,
+            transparent 100%);
     border-radius: 50%;
     filter: blur(12px);
     pointer-events: none;
@@ -1727,11 +1723,35 @@
     }
 
     .prev-btn {
-        left: 20px;
+        left: calc(50% - 65px) !important;
+        right: auto !important;
     }
 
     .next-btn {
-        right: 20px;
+        left: calc(50% + 15px) !important;
+        right: auto !important;
+    }
+
+    .wrapper {
+        margin-bottom: 35px !important;
+    }
+
+    .carousel-btn {
+        top: auto !important;
+        bottom: -25px !important;
+        transform: none !important;
+        width: 46px;
+        height: 46px;
+        font-size: 1.3rem;
+        z-index: 50;
+    }
+
+    .carousel-btn:hover {
+        transform: scale(1.1) !important;
+    }
+
+    .carousel-btn:active {
+        transform: scale(0.95) !important;
     }
 }
 
@@ -1766,7 +1786,7 @@
 
     /* Adjust 3D carousel for mobile */
     .wrapper {
-        height: 400px !important;
+        height: 450px !important;
     }
 
     .inner {
@@ -1776,17 +1796,18 @@
     }
 
     .carousel-btn {
-        width: 40px;
-        height: 40px;
+        bottom: -20px !important;
+        width: 42px;
+        height: 42px;
         font-size: 1.2rem;
     }
 
     .prev-btn {
-        left: 10px;
+        left: calc(50% - 55px) !important;
     }
 
     .next-btn {
-        right: 10px;
+        left: calc(50% + 10px) !important;
     }
 
     .ariadne-brand-card {

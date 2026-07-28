@@ -10,7 +10,7 @@ export const VideoFallback = ({
     controls = true, 
     className, 
     style,
-    crossOrigin = "anonymous",
+    crossOrigin,
     onPlay,
     onPause
 }) => {
@@ -44,9 +44,11 @@ export const VideoFallback = ({
             src={src}
             poster={poster}
             controls={controls}
+            playsInline={true}
+            webkit-playsinline="true"
             className={className}
             style={style}
-            crossOrigin={crossOrigin}
+            {...(crossOrigin ? { crossOrigin } : {})}
             onPlay={onPlay}
             onPause={onPause}
             preload="metadata"

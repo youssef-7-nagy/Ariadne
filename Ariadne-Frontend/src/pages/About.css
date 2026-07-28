@@ -639,4 +639,106 @@ html.dark .partner-card {
         font-size: 1.2rem;
     }
 }
+
+/* =============================================
+   Leaders Coverflow Section
+   ============================================= */
+.about-leaders-coverflow {
+    padding: 100px 0 120px;
+    background: #080b14;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient glow background */
+.about-leaders-coverflow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(255, 78, 0, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.about-leaders-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Reuse the shared section header style for dark bg */
+.about-leaders-coverflow .about-section-header {
+    color: #fff;
+}
+
+.about-leaders-coverflow .about-section-header h2 {
+    color: #fff;
+}
+
+.about-leaders-coverflow .about-section-header p {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.about-leaders-coverflow .about-section-header span {
+    color: #ff4e00;
+}
+
+/* Stage that holds the coverflow */
+.about-coverflow-stage {
+    width: 100%;
+    /* Height adapts: tall enough for card + dots */
+    height: 600px;
+    margin-top: 48px;
+    position: relative;
+}
+
+/* ── Tablet ── */
+@media (max-width: 900px) {
+    .about-coverflow-stage {
+        height: 520px;
+        margin-top: 36px;
+    }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .about-leaders-coverflow {
+        padding: 70px 0 80px;
+    }
+
+    .about-coverflow-stage {
+        height: 440px;
+        margin-top: 28px;
+    }
+}
+
+/* ── Small mobile ── */
+@media (max-width: 600px) {
+    .about-leaders-coverflow {
+        padding: 60px 0 70px;
+    }
+
+    .about-coverflow-stage {
+        height: 390px;
+        margin-top: 24px;
+    }
+}
+
+/* ── Very small (≤ 400px) ── */
+@media (max-width: 400px) {
+    .about-leaders-coverflow {
+        padding: 50px 0 60px;
+    }
+
+    .about-coverflow-stage {
+        height: 330px;
+        margin-top: 20px;
+    }
+}
 
