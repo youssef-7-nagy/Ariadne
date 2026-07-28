@@ -134,77 +134,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Section 2: Exact Overlapping Cascade */}
-            <section className="overlap-cascade-section">
-                <div className="cascade-container">
 
-                    {/* Card 1: Beige */}
-                    <div className="cascade-card card-beige">
-                        <div className="cascade-top text-dark">
-                            <span>ARIADNE 2026</span>
-                            <span>AGENCY</span>
-                        </div>
-                        <h2 className="cascade-title text-dark">ARIADNE<br />AGENCY</h2>
-                        <div className="cascade-subtext text-dark">
-                            <p>A PREMIUM SHOWCASE OF CINEMATIC PHOTOGRAPHY AND VISUAL DESIGN FOR BRANDS WORLDWIDE. WE TELL YOUR STORY.</p>
-                        </div>
-                    </div>
-
-                    {/* Card 2: Purple */}
-                    <div className="cascade-card card-purple">
-                        <div className="cascade-top">
-                            <span className="text-yellow">ARIADNE 2026</span>
-                            <span className="text-yellow">VISION =</span>
-                        </div>
-                        <h2 className="cascade-title text-yellow">WE ARE<br />VISUAL<br />ARTISTS</h2>
-                        <div className="cascade-footer text-yellow">
-                            <p>GLOBAL — 24/7</p>
-                        </div>
-                    </div>
-
-                    {/* Card 3: Yellow */}
-                    <div className="cascade-card card-yellow">
-                        <div className="cascade-top">
-                            <span className="text-dark"></span>
-                            <span className="text-dark">FOCUS X</span>
-                        </div>
-                        <div className="cascade-middle">
-                            <h2 className="cascade-title-small text-dark">CINEMATIC<br />VISUALS<br />2026</h2>
-                            <div className="cascade-img-inset">
-                                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&auto=format&fit=crop" alt="Cinematic Camera" />
-                            </div>
-                        </div>
-                        <div className="cascade-footer text-dark">
-                            <p>DUBAI — 10:20 AM</p>
-                        </div>
-                    </div>
-
-                    {/* Card 4: Brown */}
-                    <div className="cascade-card card-brown">
-                        <div className="cascade-flex-row">
-                            <div className="cascade-left-col">
-                                <h2 className="cascade-title text-yellow">LET'S<br />WORK</h2>
-                                <ul className="cascade-menu text-yellow">
-                                    <li>HOME</li>
-                                    <li>ABOUT US</li>
-                                    <li>PORTFOLIO</li>
-                                    <li>SERVICES</li>
-                                    <li>PACKAGES</li>
-                                    <li>CONTACT</li>
-                                </ul>
-                            </div>
-                            <div className="cascade-center-img">
-                                <img src="https://images.unsplash.com/photo-1554046920-90dcac9a7c36?q=80&w=600&auto=format&fit=crop" alt="Photographer" style={{ borderRadius: '50%' }} />
-                            </div>
-                            <div className="cascade-right-col">
-                                <p className="text-yellow text-right-align">AVAILABLE FOR BRAND<br />CAMPAIGNS, COMMERCIAL<br />SHOOTS, AND CINEMATIC<br />PROJECTS GLOBALLY.</p>
-                                <h2 className="cascade-title text-yellow text-right-align">WITH<br />US</h2>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
 
             {/* Section 3: 3D Diagonal Glass Showcase */}
             <section className="diagonal-showcase-section">
