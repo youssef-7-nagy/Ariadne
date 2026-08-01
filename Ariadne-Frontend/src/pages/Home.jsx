@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css';
 import StaggeredStoryShowcase from '../components/StaggeredStoryShowcase';
+import PhotographyShowcase from '../components/PhotographyShowcase';
+import Section3Showcase from '../components/Section3Showcase';
 import imgShortFilms from '../assets/categories/short-films.png';
 import imgDocumentaries from '../assets/categories/documentaries.png';
 import imgCommercials from '../assets/categories/commercials.png';
@@ -140,27 +142,8 @@ const Home = () => {
 
 
 
-            {/* Section 3.5: Glass Panels Showcase */}
-            <section className="glass-panels-section">
-                <div className="glass-panels-stage">
-                    <div className="glass-panel glass-panel-1">
-                        <img src="https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?q=80&w=1200&auto=format&fit=crop" alt="Photography" className="glass-panel-img" />
-                        <div className="glass-panel-shine"></div>
-                        <div className="glass-panel-edge-light"></div>
-                    </div>
-                    <div className="glass-panel glass-panel-2">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200&auto=format&fit=crop" alt="Cinematic" className="glass-panel-img" />
-                        <div className="glass-panel-shine"></div>
-                        <div className="glass-panel-edge-light"></div>
-                    </div>
-                    <div className="glass-panel glass-panel-3">
-                        <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1200&auto=format&fit=crop" alt="Commercial" className="glass-panel-img" />
-                        <div className="glass-panel-shine"></div>
-                        <div className="glass-panel-edge-light"></div>
-                    </div>
-                    <div className="glass-floor-reflection"></div>
-                </div>
-            </section>
+            {/* Section 3: Interactive 3D Showcase */}
+            <Section3Showcase />
 
             {/* Section 4: Testimonials */}
             <section className="home-section testimonials-section">
@@ -239,6 +222,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Section 5.5: Photography 3D Overlapping Showcase */}
+            <PhotographyShowcase />
 
             {/* Section 6: Call to Action */}
             <section className="home-section cta-section">

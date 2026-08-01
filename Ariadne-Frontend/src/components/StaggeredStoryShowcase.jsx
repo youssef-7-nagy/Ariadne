@@ -15,6 +15,11 @@ const StaggeredStoryShowcase = () => {
 
                     {/* Phone 1: Far Left - Orange Background Phone */}
                     <div className="mobile-phone-frame phone-1">
+                        <div className="phone-camera-notch">
+                            <span className="notch-lens"></span>
+                            <span className="notch-speaker"></span>
+                        </div>
+                        <div className="glass-glare-shine"></div>
                         <div className="phone-screen phone-orange">
                             <div className="phone-top-bg-img">
                                 <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=800&auto=format&fit=crop" alt="Desert" />
@@ -23,7 +28,7 @@ const StaggeredStoryShowcase = () => {
                                 <div className="inset-img-pill">
                                     <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop" alt="Coastal Road" />
                                 </div>
-                                <span className="phone-meta-label">Featured article</span>
+                                <span className="phone-meta-label">Featured story</span>
                                 <h3>Wild Camping Along Tasmania's East Coast</h3>
                             </div>
                             <div className="phone-bottom-scroll">
@@ -35,6 +40,11 @@ const StaggeredStoryShowcase = () => {
 
                     {/* Phone 2: Top Left - Dark Olive Phone */}
                     <div className="mobile-phone-frame phone-2">
+                        <div className="phone-camera-notch">
+                            <span className="notch-lens"></span>
+                            <span className="notch-speaker"></span>
+                        </div>
+                        <div className="glass-glare-shine"></div>
                         <div className="phone-screen phone-olive">
                             <div className="phone-curved-top-img">
                                 <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop" alt="Landscape" />
@@ -52,6 +62,11 @@ const StaggeredStoryShowcase = () => {
 
                     {/* Phone 3: Center Main - Tall White Phone */}
                     <div className="mobile-phone-frame phone-3">
+                        <div className="phone-camera-notch">
+                            <span className="notch-lens"></span>
+                            <span className="notch-speaker"></span>
+                        </div>
+                        <div className="glass-glare-shine"></div>
                         <div className="phone-screen phone-white">
                             <div className="phone-main-header-img">
                                 <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop" alt="Tasmania Coast" />
@@ -64,7 +79,7 @@ const StaggeredStoryShowcase = () => {
                                 </div>
                                 <div className="phone-dashed-divider light"></div>
                                 <p className="phone-article-text">
-                                    The coast of Tasmania doesn't care where you came from. It just opens up—wild, wind-lashed, and utterly indifferent. I parked the camper by a cliff's edge one afternoon, unsure if I'd stay one night or three. I stayed four. Each morning I woke to the sound of the ocean...
+                                    The coast of Tasmania doesn't care where you came from. It just opens up—wild, wind-lashed, and utterly indifferent. I parked the camper by a cliff's edge one afternoon, unsure if I'd stay one night or three...
                                 </p>
                             </div>
                         </div>
@@ -72,6 +87,11 @@ const StaggeredStoryShowcase = () => {
 
                     {/* Phone 4: Bottom Center - Light Cream Phone */}
                     <div className="mobile-phone-frame phone-4">
+                        <div className="phone-camera-notch">
+                            <span className="notch-lens"></span>
+                            <span className="notch-speaker"></span>
+                        </div>
+                        <div className="glass-glare-shine"></div>
                         <div className="phone-screen phone-cream">
                             <div className="phone-padded-content">
                                 <h3 className="phone-section-title">Latest travel stories</h3>
@@ -86,6 +106,11 @@ const StaggeredStoryShowcase = () => {
 
                     {/* Phone 5: Top Right - Warm Beige Poster Phone */}
                     <div className="mobile-phone-frame phone-5">
+                        <div className="phone-camera-notch">
+                            <span className="notch-lens"></span>
+                            <span className="notch-speaker"></span>
+                        </div>
+                        <div className="glass-glare-shine"></div>
                         <div className="phone-screen phone-warm-beige">
                             <div className="phone-wavy-top-img">
                                 <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=800&auto=format&fit=crop" alt="Trail" />
@@ -111,6 +136,11 @@ const StaggeredStoryShowcase = () => {
 
                     {/* Phone 6: Bottom Right - Light Blue Phone */}
                     <div className="mobile-phone-frame phone-6">
+                        <div className="phone-camera-notch">
+                            <span className="notch-lens"></span>
+                            <span className="notch-speaker"></span>
+                        </div>
+                        <div className="glass-glare-shine"></div>
                         <div className="phone-screen phone-light-blue">
                             <div className="phone-top-pill-nav">
                                 <span>Home</span>

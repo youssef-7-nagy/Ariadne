@@ -1,8 +1,8 @@
 import React from 'react';
 import './About.css';
-import aboutStory from '../assets/about-story.jpg';
-import CoverflowGallery from '../components/CoverflowGallery';
+import aboutStory from '../assets/meet-the-minds/all.jpg';
 import InteractiveGrid from '../components/InteractiveGrid';
+import MeetTheMinds from '../components/MeetTheMinds';
 
 // Import logos from assets/trusted leaders
 import logoBasha from '../assets/trusted leaders/Basha.png';
@@ -28,52 +28,9 @@ const PARTNERS = [
     { name: 'Lo2ta', color: '204, 142, 252', letter: 'L', logo: logoClient4, contain: true },
 ];
 
-const TEAM = [
-    {
-        name: 'Youssef',
-        role: 'Creative Director',
-        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    },
-    {
-        name: 'Sarah',
-        role: 'Lead Photographer',
-        photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    },
-    {
-        name: 'Ahmed',
-        role: 'Creative Producer',
-        photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    }
-];
 
-// Leaders for coverflow section
-const LEADERS = [
-    {
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        name: 'Youssef Nagy',
-        role: 'Creative Director & Founder',
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        name: 'Sarah Khalil',
-        role: 'Lead Photographer',
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        name: 'Ahmed Mostafa',
-        role: 'Creative Producer',
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        name: 'Laila Hassan',
-        role: 'Art Director',
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        name: 'Nour El-Din',
-        role: 'Cinematographer',
-    },
-];
+
+
 
 const VALUES = [
     {
@@ -158,60 +115,10 @@ const About = () => {
                 </div>
             </section>
 
-            {/* ── Leaders Coverflow (Section 2) ── */}
-            <section className="about-leaders-coverflow">
-                <div className="about-leaders-inner">
-                    <div className="about-section-header">
-                        <h2>The <span>Visionaries</span> Behind The Lens</h2>
-                        <p>Meet the creative leaders who bring Ariadne's vision to life — frame by frame.</p>
-                    </div>
-                    <div className="about-coverflow-stage">
-                        <CoverflowGallery
-                            slides={LEADERS}
-                            baseCardWidth={400}
-                            baseCardHeight={440}
-                            radius={4}
-                            tilt={12}
-                            sideTilt={8}
-                            gap={8}
-                            opacity={55}
-                            showTitle={true}
-                            autoplay={false}
-                            theme="light"
-                            transition={{ type: 'tween', duration: 0.6, delay: 3, ease: [0.22, 1, 0.36, 1] }}
-                        />
-                    </div>
-                </div>
-            </section>
 
-            {/* ── Team ── */}
-            <section className="about-team">
-                <div className="about-team-inner">
-                    <div className="about-section-header">
-                        <h2>Meet The <span>Minds</span></h2>
-                        <p>The core visionaries behind the lens, driving our passion for visual storytelling.</p>
-                    </div>
-                    <div className="about-team-grid">
-                        {TEAM.map((member, i) => (
-                            <div className="team-card" key={i}>
-                                <div className="team-card-img">
-                                    <img src={member.photo} alt={member.name} />
-                                    <div className="team-card-overlay">
-                                        <div className="team-socials">
-                                            <span>📷</span>
-                                            <span>🔗</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="team-card-info">
-                                    <h3>{member.name}</h3>
-                                    <p>{member.role}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+
+            {/* ── Meet The Minds Section ── */}
+            <MeetTheMinds />
 
             {/* ── Values ── */}
             <section className="about-values">
