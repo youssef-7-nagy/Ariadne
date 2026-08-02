@@ -16,7 +16,7 @@ import './MeetTheMinds.css';
 import imgLeo from '../assets/meet-the-minds/Léonardo HANNA.jpg';
 import imgPierre from '../assets/meet-the-minds/Pierre TOMA.jpg';
 import imgFady from '../assets/meet-the-minds/Fady BARSSOUM.jpg';
-import imgRamsis from '../assets/meet-the-minds/Ramsis HANNA.jpg';
+import imgRamsis from '../assets/meet-the-minds/Ramsis HAN.jpg';
 import imgSamah from '../assets/meet-the-minds/Samah TADROS.jpg';
 import imgJohn from '../assets/meet-the-minds/John ZAKI.jpg';
 import imgMaria from '../assets/meet-the-minds/Maria ARTINE.jpg';
