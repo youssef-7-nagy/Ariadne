@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css';
@@ -13,6 +13,13 @@ import imgCorporate from '../assets/categories/corporate.png';
 import imgMusicVideos from '../assets/categories/music-videos.png';
 import imgPhotography from '../assets/categories/photography.png';
 import imgBTS from '../assets/categories/behind-the-scenes.png';
+import imgAboutStory from '../assets/about-story.jpg';
+import imgHome6257 from '../assets/home/IMG_6257.jpg';
+import imgHome6270 from '../assets/home/IMG_6270.jpg';
+import imgHome6342 from '../assets/home/IMG_6342.jpg';
+import imgHome301 from '../assets/home/section301.jpg';
+import imgHome302 from '../assets/home/section302.jpg';
+import imgHome303 from '../assets/home/section303.jpg';
 
 
 const LOCAL_IMAGE_MAP = {
@@ -37,21 +44,38 @@ const resolveUrl = (src) => {
     return `${API_URL}${src}`;
 };
 
-const HERO_IMAGES = [
-    { src: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&auto=format&fit=crop', top: '8%', left: '15%', rotate: '-12deg', size: 'clamp(140px, 15vw, 280px)', delay: '0s' },
-    { src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop', top: '2%', left: '50%', rotate: '4deg', size: 'clamp(160px, 18vw, 340px)', transform: 'translateX(-50%)', delay: '1s' },
-    { src: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop', top: '10%', right: '15%', rotate: '15deg', size: 'clamp(130px, 14vw, 260px)', delay: '2s' },
-    { src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=400&auto=format&fit=crop', top: '35%', left: '4%', rotate: '-22deg', size: 'clamp(110px, 12vw, 220px)', delay: '0.5s' },
-    { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop', top: '32%', right: '3%', rotate: '25deg', size: 'clamp(120px, 13vw, 240px)', delay: '1.5s' },
-    { src: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=400&auto=format&fit=crop', bottom: '20%', left: '12%', rotate: '-8deg', size: 'clamp(150px, 16vw, 290px)', delay: '2.5s' },
-    { src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=400&auto=format&fit=crop', bottom: '22%', right: '10%', rotate: '-10deg', size: 'clamp(140px, 15vw, 270px)', delay: '0.8s' },
-    { src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop', top: '70%', left: '-2%', rotate: '-35deg', size: 'clamp(90px, 10vw, 190px)', delay: '1.2s' },
-    { src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop', top: '65%', right: '0%', rotate: '32deg', size: 'clamp(100px, 11vw, 210px)', delay: '2.2s' },
+
+
+const curvedGalleryImages = [
+    { src: imgHome6270, left: '1.5%', top: '56%', rotate: -62 },
+    { src: imgHome6342, left: '9%', top: '30%', rotate: -42 },
+    { src: imgHome301, left: '21%', top: '13%', rotate: -23 },
+    { src: imgHome302, left: '36.5%', top: '4%', rotate: -8 },
+    { src: imgHome303, left: '53%', top: '4%', rotate: 8 },
+    { src: imgAboutStory, left: '68.5%', top: '13%', rotate: 23 },
+    { src: imgHome6257, left: '80%', top: '30%', rotate: 42 },
+    { src: imgHome6270, left: '87.5%', top: '56%', rotate: 62 },
 ];
 
 const Home = () => {
     const [categories, setCategories] = useState([]);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [carouselHeight, setCarouselHeight] = useState(600);
+
+    const updateCarouselHeight = useCallback(() => {
+        const w = window.innerWidth;
+        if (w <= 375) setCarouselHeight(320);
+        else if (w <= 480) setCarouselHeight(390);
+        else if (w <= 600) setCarouselHeight(450);
+        else if (w <= 768) setCarouselHeight(520);
+        else setCarouselHeight(600);
+    }, []);
+
+    useEffect(() => {
+        updateCarouselHeight();
+        window.addEventListener('resize', updateCarouselHeight);
+        return () => window.removeEventListener('resize', updateCarouselHeight);
+    }, [updateCarouselHeight]);
 
     const getCategoryBg = (category) => {
         return category.coverImage ? resolveUrl(category.coverImage) : LOCAL_IMAGE_MAP[category.slug];
@@ -72,62 +96,211 @@ const Home = () => {
         fetchCategories();
     }, []);
 
-    const getHeroImages = () => {
-        return HERO_IMAGES;
-    };
+
 
     return (
         <div className="home-container">
-            {/* Section 1: Hero Cinematic */}
+            {/* Section 1: Hero Cinematic Intro */}
             <section className="home-hero-cinematic">
-                <div className="hero-cinematic-bg">
-                    <div className="hero-glow hero-glow-left"></div>
-                    <div className="hero-glow hero-glow-right"></div>
-                    <div className="hero-rainbow"></div>
+
+                {/* === Section 2 Background Glows & Texture === */}
+                <div className="curved-bg-glows">
+                    <div className="curved-glow-left-amber"></div>
+                    <div className="curved-glow-right-amber"></div>
+                    <div className="curved-rainbow-leak"></div>
+                    <div className="curved-noise-overlay"></div>
                 </div>
 
-                <div className="floating-gallery">
-                    {getHeroImages().map((img, idx) => (
-                        <div
-                            key={idx}
-                            className="float-img"
-                            style={{
-                                top: img.top,
-                                left: img.left,
-                                right: img.right,
-                                bottom: img.bottom,
-                                width: img.size,
-                                animationDelay: img.delay,
-                                '--base-rot': img.rotate,
-                                '--base-trans': img.transform || 'translateX(0)',
-                            }}
-                        >
-                            <img src={img.src} alt={`Gallery item ${idx}`} />
+                {/* === Film grain + ambient lighting === */}
+                <div className="hero-grain"></div>
+                <div className="hero-ambient-glow"></div>
+
+                {/* === Letterbox bars === */}
+                <div className="hero-bar hero-bar-top"></div>
+                <div className="hero-bar hero-bar-bottom"></div>
+
+                {/* === HUD — top bar === */}
+                <div className="hero-hud">
+                    <div className="hero-hud-l">
+                        <span className="hero-rec-dot"></span>
+                        <span>REC</span>
+                    </div>
+                    <div className="hero-hud-c">
+                        <span>ARIADNE CREATIVE STUDIO</span>
+                        <span className="hero-hud-gem">◆</span>
+                        <span>EST. 2026</span>
+                    </div>
+                    <div className="hero-hud-r">F/1.8 · 85mm · ISO 400</div>
+                </div>
+
+                {/* === MAIN CONTAINER: Split Grid === */}
+                <div className="hero-main-container">
+
+                    {/* === LEFT: Text content === */}
+                    <div className="hero-text-panel">
+
+                        {/* Studio badge */}
+                        <div className="hero-badge">
+                            <span className="hero-badge-bar"></span>
+                            <span>Photography Studio</span>
                         </div>
-                    ))}
-                </div>
 
-                <div className="cinematic-content">
-                    <div className="center-text-block">
-                        <h1>Cinematic Visual<br />Storytelling</h1>
-                        <p>A premium photography and documentation agency. We capture beautiful moments and create stunning visual assets your audience will love.</p>
-                        <Link to="/packages" className="btn-book-session">Discover Our Work</Link>
+                        {/* Main headline */}
+                        <h1 className="hero-headline">
+                            <span className="hero-hl-top">We Create</span>
+                            <span className="hero-hl-serif">Timeless</span>
+                            <span className="hero-hl-bottom">Imagery</span>
+                        </h1>
+
+                        {/* Thin divider */}
+                        <div className="hero-rule"></div>
+
+                        {/* Subtext */}
+                        <p className="hero-subtext">
+                            A premium photography studio crafting luxurious visual stories — portraits, events, and commercial imagery for distinguished brands.
+                        </p>
+
+                        {/* CTAs */}
+                        <div className="hero-cta-row">
+                            <Link to="/portfolio" className="hero-btn-primary">
+                                <span>View Portfolio</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M5 12H19M19 12L12 5M19 12L12 19"/>
+                                </svg>
+                            </Link>
+                            <Link to="/packages" className="hero-btn-ghost">Book a Session</Link>
+                        </div>
+
+                        {/* Stats */}
+                        <div className="hero-stats-row">
+                            <div className="hero-stat">
+                                <span className="hero-stat-num">500<sup>+</sup></span>
+                                <span className="hero-stat-label">Sessions</span>
+                            </div>
+                            <div className="hero-stat-sep"></div>
+                            <div className="hero-stat">
+                                <span className="hero-stat-num">8</span>
+                                <span className="hero-stat-label">Years</span>
+                            </div>
+                            <div className="hero-stat-sep"></div>
+                            <div className="hero-stat">
+                                <span className="hero-stat-num">100<sup>%</sup></span>
+                                <span className="hero-stat-label">Satisfaction</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="cinematic-features">
-                        <div className="feat-item">
-                            <h4>Unmatched Quality</h4>
-                            <p>Premium aesthetics<br />in every frame</p>
+                    {/* === RIGHT: Framed Photo Showcase === */}
+                    <div className="hero-right-showcase">
+                        <div className="hero-frame-wrapper">
+                            {/* Camera Viewfinder Corners */}
+                            <span className="vf-corner vf-tl"></span>
+                            <span className="vf-corner vf-tr"></span>
+                            <span className="vf-corner vf-bl"></span>
+                            <span className="vf-corner vf-br"></span>
+
+                            <img src={imgAboutStory} alt="Ariadne Photographer" className="hero-framed-photo" />
+
+                            <div className="hero-frame-tag">
+                                <span className="tag-dot"></span>
+                                <span>BTS · BEHIND THE LENS</span>
+                            </div>
                         </div>
-                        <div className="feat-divider"></div>
-                        <div className="feat-item">
-                            <h4>Artistic Vision</h4>
-                            <p>Every shoot is tailored<br />to your story</p>
+                    </div>
+
+                </div>
+
+                {/* === Vertical side label === */}
+                <div className="hero-side-label">
+                    <span>CAPTURING MOMENTS · CRAFTING MEMORIES</span>
+                </div>
+
+                {/* === Scroll indicator === */}
+                <div className="hero-scroll">
+                    <div className="hero-scroll-line"></div>
+                    <span>SCROLL</span>
+                </div>
+
+            </section>
+
+
+            {/* Section 2: Curved Gallery Showcase */}
+            <section className="curved-gallery-section">
+                <div className="curved-bg-glows">
+                    <div className="curved-glow-left-amber"></div>
+                    <div className="curved-glow-right-amber"></div>
+                    <div className="curved-rainbow-leak"></div>
+                    <div className="curved-noise-overlay"></div>
+                </div>
+
+                {/* Technical Viewfinder Camera Overlay */}
+                <div className="curved-viewfinder-overlay">
+                    <div className="vf-bracket vf-top-left"></div>
+                    <div className="vf-bracket vf-top-right"></div>
+                    <div className="vf-bracket vf-bottom-left"></div>
+                    <div className="vf-bracket vf-bottom-right"></div>
+                    
+                    <div className="vf-grid-line vf-grid-v1"></div>
+                    <div className="vf-grid-line vf-grid-v2"></div>
+                    <div className="vf-grid-line vf-grid-h1"></div>
+                    <div className="vf-grid-line vf-grid-h2"></div>
+                    
+                    <div className="vf-status vf-status-tl">
+                        <span className="vf-rec-dot"></span>
+                        <span className="vf-status-text">REC</span>
+                    </div>
+                    <div className="vf-status vf-status-tr">
+                        <span className="vf-status-text">TC 09:12:45:22</span>
+                    </div>
+                    <div className="vf-status vf-status-bl">
+                        <span className="vf-status-text">F2.8  |  1/250s  |  ISO 400</span>
+                    </div>
+                    <div className="vf-status vf-status-br">
+                        <span className="vf-status-text">RAW 8K  |  24fps  |  [+]</span>
+                    </div>
+                    <div className="vf-focus-ring"></div>
+                </div>
+
+                <div className="curved-gallery-container">
+                    {/* The arch of curved photos */}
+                    <div className="curved-arch-photos">
+                        {curvedGalleryImages.map((img, idx) => (
+                            <div 
+                                key={idx} 
+                                className={`arch-photo-card arch-card-${idx}`}
+                                style={{
+                                    left: img.left,
+                                    top: img.top,
+                                    transform: `rotate(${img.rotate}deg)`,
+                                }}
+                            >
+                                <img src={img.src} alt={`Showcase visual ${idx + 1}`} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Center Content block */}
+                    <div className="curved-center-content">
+                        <h2>Create Timeless Photos<br />That Tell Your Story</h2>
+                        <p>Professional photography for personal moments, brands, and unforgettable memories.</p>
+                        <Link to="/packages" className="btn-book-session-curved">Book a Session</Link>
+                    </div>
+
+                    {/* Footer features */}
+                    <div className="curved-footer-features">
+                        <div className="curved-feat-col">
+                            <h5>Fast Delivery</h5>
+                            <p>Get your edited gallery in a short time</p>
                         </div>
-                        <div className="feat-divider"></div>
-                        <div className="feat-item">
-                            <h4>Fast Delivery</h4>
-                            <p>Professional results<br />when you need them</p>
+                        <div className="curved-feat-divider"></div>
+                        <div className="curved-feat-col">
+                            <h5>Personal Approach</h5>
+                            <p>Every shoot is tailored to your vision</p>
+                        </div>
+                        <div className="curved-feat-divider"></div>
+                        <div className="curved-feat-col">
+                            <h5>Natural Style</h5>
+                            <p>Authentic photos with emotion and elegance</p>
                         </div>
                     </div>
                 </div>
@@ -157,7 +330,7 @@ const Home = () => {
                     <h2 className="section-title">Our Expertise</h2>
                     <p className="section-subtitle">Explore the diverse range of visual storytelling categories we offer.</p>
 
-                    <div className="wrapper" style={{ height: '600px', marginTop: '20px' }}>
+                    <div className="wrapper" style={{ height: `${carouselHeight}px`, marginTop: '20px' }}>
                         <button
                             className="carousel-btn prev-btn"
                             onClick={() => setActiveIndex(prev => prev - 1)}

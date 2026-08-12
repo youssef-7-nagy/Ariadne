@@ -2,39 +2,37 @@ import React, { useEffect, useState } from 'react';
 import './SplashScreen.css';
 
 const SplashScreen = ({ onFinish }) => {
-    const [isFadingOut, setIsFadingOut] = useState(false);
-    const [showElements, setShowElements] = useState(false);
+    const [isExiting, setIsExiting] = useState(false);
 
     useEffect(() => {
-        // Show loading bar slightly after logo starts revealing
-        const elementsTimer = setTimeout(() => {
-            setShowElements(true);
-        }, 500);
+        // Start smooth exit dissolve after 1.5s
+        const exitTimer = setTimeout(() => {
+            setIsExiting(true);
+        }, 1500);
 
-        const timer = setTimeout(() => {
-            setIsFadingOut(true);
-            setTimeout(() => {
-                if (onFinish) onFinish();
-            }, 800); // 800ms fade out matches CSS transition
-        }, 3000); // Appear for 3 seconds
+        // Completely finish & remove splash after 2.0s total
+        const finishTimer = setTimeout(() => {
+            if (onFinish) onFinish();
+        }, 2050);
 
         return () => {
-            clearTimeout(timer);
-            clearTimeout(elementsTimer);
+            clearTimeout(exitTimer);
+            clearTimeout(finishTimer);
         };
     }, [onFinish]);
 
     return (
-        <div className={`splash-screen-container ${isFadingOut ? 'fade-out' : ''}`}>
-            <div className="splash-content">
-                <div className="logo-split-container">
-                    <img src="/mylogo.png" alt="Ariadne Logo Left" className="splash-logo-half left-half" />
-                    <img src="/mylogo.png" alt="Ariadne Logo Right" className="splash-logo-half right-half" />
-                    <div className="logo-glow"></div>
-                </div>
-                <div className={`loading-bar-container ${showElements ? 'show' : ''}`}>
-                    <div className="loading-bar"></div>
-                </div>
+        <div className={`smooth-splash-root ${isExiting ? 'exit' : ''}`}>
+            {/* Soft Ambient Radial Light */}
+            <div className="smooth-splash-glow" />
+
+            {/* Logo Stage */}
+            <div className="smooth-splash-content">
+                <img
+                    src="/mylogo.png"
+                    alt="ARIA Production"
+                    className="smooth-splash-logo"
+                />
             </div>
         </div>
     );

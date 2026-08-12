@@ -1,130 +1,124 @@
-.splash-screen-container {
+/* ============================================================
+   EASY & BUTTERY-SMOOTH ARIA SPLASH SCREEN
+   Apple & Modern App Style (Fast, Silky, Ultra-Clean)
+   ============================================================ */
+
+.smooth-splash-root {
     position: fixed;
     inset: 0;
-    z-index: 9999;
-    background-color: #ffffff;
+    z-index: 999999;
+    background: #07090e;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1), visibility 0.8s ease-in-out;
+    overflow: hidden;
+    user-select: none;
+    pointer-events: auto;
+    
+    /* Smooth root crossfade exit */
+    opacity: 1;
+    transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.55s;
+    animation: rootFadeIn 0.3s ease-out forwards;
 }
 
-.splash-screen-container.fade-out {
+/* Exit state */
+.smooth-splash-root.exit {
     opacity: 0;
-    visibility: hidden;
-    transform: scale(1.05);
-    transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+    pointer-events: none;
 }
 
-.splash-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3rem;
+@keyframes rootFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
-.logo-split-container {
-    position: relative;
-    display: inline-block;
-}
-
-.splash-logo-half {
-    width: auto;
-    max-width: 60vw;
-    height: auto;
-    max-height: 40vh;
-    object-fit: contain;
-    z-index: 2;
-    display: block;
-}
-
-.left-half {
-    clip-path: inset(0 50% 0 0); /* Crops out the right half */
-    animation: slide-from-left 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0;
-}
-
-.right-half {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    clip-path: inset(0 0 0 50%); /* Crops out the left half */
-    animation: slide-from-right 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0;
-}
-
-.logo-glow {
+/* Ambient Radial Soft Glow */
+.smooth-splash-glow {
     position: absolute;
     top: 50%;
     left: 50%;
+    width: 480px;
+    height: 480px;
     transform: translate(-50%, -50%);
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.04) 0%, rgba(255,255,255,0) 70%);
+    background: radial-gradient(
+        circle,
+        rgba(59, 130, 246, 0.18) 0%,
+        rgba(37, 99, 235, 0.06) 45%,
+        transparent 70%
+    );
     border-radius: 50%;
-    z-index: 1;
-    animation: pulse-glow 3s infinite ease-in-out;
+    pointer-events: none;
+    animation: glowPulse 1.8s ease-in-out infinite alternate;
 }
 
-.loading-bar-container {
-    width: 200px;
-    height: 2px;
-    background-color: rgba(0, 0, 0, 0.05);
-    border-radius: 2px;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+@keyframes glowPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.92);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.08);
+        opacity: 1;
+    }
 }
 
-.loading-bar-container.show {
-    opacity: 1;
-    transform: translateY(0);
+/* Content Container */
+.smooth-splash-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.loading-bar {
-    height: 100%;
-    width: 0%;
-    background-color: #000000;
-    animation: load-progress 2.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+/* Logo Image Animation */
+.smooth-splash-logo {
+    width: clamp(160px, 30vw, 300px);
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: screen;
+    
+    /* Initial enter animation: smooth scale + fade */
+    animation: logoEnter 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes slide-from-left {
+.smooth-splash-root.exit .smooth-splash-logo {
+    animation: logoExit 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes logoEnter {
     0% {
         opacity: 0;
-        transform: translateX(-60vw) scale(0.9);
-        filter: blur(8px);
+        transform: scale(0.91) translateY(6px);
+        filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.2));
     }
     100% {
         opacity: 1;
-        transform: translateX(0) scale(1);
-        filter: blur(0);
+        transform: scale(1) translateY(0);
+        filter: drop-shadow(0 0 35px rgba(59, 130, 246, 0.55))
+                drop-shadow(0 0 70px rgba(37, 99, 235, 0.25));
     }
 }
 
-@keyframes slide-from-right {
+@keyframes logoExit {
     0% {
-        opacity: 0;
-        transform: translateX(60vw) scale(0.9);
-        filter: blur(8px);
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 35px rgba(59, 130, 246, 0.55));
     }
     100% {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-        filter: blur(0);
+        opacity: 0;
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 50px rgba(59, 130, 246, 0));
     }
 }
 
-@keyframes pulse-glow {
-    0% { width: 120%; height: 120%; opacity: 0.5; }
-    50% { width: 160%; height: 160%; opacity: 1; }
-    100% { width: 120%; height: 120%; opacity: 0.5; }
-}
-
-@keyframes load-progress {
-    0% { width: 0%; }
-    40% { width: 60%; }
-    100% { width: 100%; }
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .smooth-splash-glow {
+        width: 320px;
+        height: 320px;
+    }
 }

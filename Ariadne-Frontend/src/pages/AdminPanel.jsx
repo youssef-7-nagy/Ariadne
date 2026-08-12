@@ -3,7 +3,7 @@ import axios from 'axios';
 import { notify } from '../utils/notify';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { FiCheck, FiChevronLeft, FiChevronRight, FiEdit2, FiImage, FiPlus, FiTrash2, FiUploadCloud, FiX } from "react-icons/fi";
-import { WalletIcon, CreditCardIcon } from '../components/TransactionIcons';
+import { WalletIcon, CreditCardIcon, InstaPayIcon, BankTransferIcon } from '../components/TransactionIcons';
 import './AdminPanel.css'; 
 import './profile.css';
 import { PortfolioCMS } from './CMSAdmin';
@@ -39,6 +39,8 @@ const AdminPanel = () => {
     }
   });
   const token = localStorage.getItem("token");
+  const userRole = (userData?.role || 'user').toLowerCase();
+  const isSuperAdmin = userRole === 'superadmin';
   
   // --- STATE ---
   const [activeTab, setActiveTab] = useState('overview'); 
@@ -98,8 +100,6 @@ const AdminPanel = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const userRole = (userData?.role || 'admin').toLowerCase();
 
   // --- COLORS ---
   const COLORS = ['#4361ee', '#3a0ca3', '#f72585', '#4cc9f0', '#10b981', '#f59e0b'];
@@ -303,10 +303,19 @@ const AdminPanel = () => {
   const normalizedSearch = useMemo(() => normalize(searchTerm).trim(), [searchTerm]);
 
   const filteredUsers = useMemo(() => {
-    if (!normalizedSearch) return users;
-    return users.filter((user) =>
-      `${user._id} ${user.name} ${user.email} ${user.role}`.toLowerCase().includes(normalizedSearch)
-    );
+    let list = users;
+    if (normalizedSearch) {
+      list = users.filter((user) =>
+        `${user._id} ${user.name} ${user.email} ${user.role}`.toLowerCase().includes(normalizedSearch)
+      );
+    }
+    const rolePriority = { superadmin: 1, admin: 2, user: 3 };
+    return [...list].sort((a, b) => {
+      const pA = rolePriority[a.role?.toLowerCase()] || 4;
+      const pB = rolePriority[b.role?.toLowerCase()] || 4;
+      if (pA !== pB) return pA - pB;
+      return (a.name || '').localeCompare(b.name || '');
+    });
   }, [users, normalizedSearch]);
 
   const filteredBookings = useMemo(() => {
@@ -449,6 +458,10 @@ const AdminPanel = () => {
   };
 
   const handleUserRoleChange = async (id, role) => {
+    if (!isSuperAdmin) {
+      notify.error("Error - Only a Super Admin can change user roles.");
+      return;
+    }
     if (userData._id === id) {
       const confirmed = await notify.confirm("Warning - Change your own role?");
       if (!confirmed) return;
@@ -457,8 +470,8 @@ const AdminPanel = () => {
       await axios.put(`${API_URL}/api/auth/users/${id}/role`, { role }, { headers: { Authorization: `Bearer ${token}` } });
       setUsers((prev) => prev.map((user) => (user._id === id ? { ...user, role } : user)));
       notify.success(`Success - Role changed to ${role}.`);
-    } catch {
-      notify.error("Error - Failed to update user role.");
+    } catch (err) {
+      notify.error(err?.response?.data?.message || "Error - Failed to update user role.");
     }
   };
 
@@ -654,13 +667,15 @@ const AdminPanel = () => {
                 <img src={getAvatarUrl(userData?.gender)} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <h4>{userData?.name || 'Admin'}</h4>
-            <span className={`sidebar-role-badge ${userRole === 'admin' ? 'admin' : 'user'}`}>
-              {userRole === 'admin' ? 'System Administrator' : 'Staff'}
+            <span className={`sidebar-role-badge ${userRole === 'superadmin' ? 'superadmin' : (userRole === 'admin' ? 'admin' : 'user')}`}>
+              {userRole === 'superadmin' ? 'Super Admin' : (userRole === 'admin' ? 'System Administrator' : 'Staff')}
             </span>
             <p>{userData?.email || '-'}</p>
           </div>
           <nav className="admin-nav">
-              {['overview','users','transactions', 'categories', 'projects'].map(t => (
+              {['overview','users','transactions', 'categories', 'projects']
+                .filter(t => t !== 'transactions' || isSuperAdmin)
+                .map(t => (
                   <button key={t} className={activeTab === t ? 'active' : ''} onClick={() => setActiveTab(t)}>{t.charAt(0).toUpperCase() + t.slice(1)}</button>
               ))}
           </nav>
@@ -692,7 +707,7 @@ const AdminPanel = () => {
                       Export Users
                     </button>
                   )}
-                  {activeTab === 'transactions' && (
+                  {activeTab === 'transactions' && isSuperAdmin && (
                     <button className="container-btn-file" onClick={downloadTransactionsCSV}>
                       <ExportFileIcon />
                       Export Transactions
@@ -724,11 +739,13 @@ const AdminPanel = () => {
                   <>
                     <div className="stats-grid">
                         <div className={`stat-box purple ${selectedMetric==='users'?'active-metric':''}`} onClick={()=>setSelectedMetric('users')}><h3>{users.length}</h3><p>Users</p></div>
-                        <div className={`stat-box blue ${selectedMetric==='transactions'?'active-metric':''}`} onClick={()=>setSelectedMetric('transactions')}><h3>{transactions.length}</h3><p>Transactions</p></div>
+                        {isSuperAdmin && (
+                          <div className={`stat-box blue ${selectedMetric==='transactions'?'active-metric':''}`} onClick={()=>setSelectedMetric('transactions')}><h3>{transactions.length}</h3><p>Transactions</p></div>
+                        )}
                     </div>
 
                     <div className="digital-card-container hover-lift" style={{ marginTop: '20px', maxWidth: '400px' }}>
-                        <div className={`digital-id-card shimmer-card ${userRole === 'admin' ? 'admin-theme' : 'user-theme'}`}>
+                        <div className={`digital-id-card shimmer-card ${userRole === 'superadmin' ? 'superadmin-theme' : (userRole === 'admin' ? 'admin-theme' : 'user-theme')}`}>
                             <div className="card-top-row">
                                 <div className="card-logo">Administrative Identity</div>
                                 <div className="card-chip" />
@@ -737,7 +754,7 @@ const AdminPanel = () => {
                             <div className="card-middle-row">
                                 <h4>{userData?.name || 'Administrator'}</h4>
                                 <span className="card-role-text">
-                                    {userRole === 'admin' ? 'System Administrator' : 'Staff'}
+                                    {userRole === 'superadmin' ? 'Super Admin' : (userRole === 'admin' ? 'System Administrator' : 'Staff')}
                                 </span>
                             </div>
 
@@ -1020,18 +1037,27 @@ const AdminPanel = () => {
                 ) : (
                   <div style={{overflowX: 'auto'}}>
                     <table className="admin-table">
-                        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Change</th></tr></thead>
+                        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Change Role</th></tr></thead>
                         <tbody>
                             {filteredUsers.map(u => (
                                 <tr key={u._id}>
                                   <td>{u.name}</td>
                                   <td>{u.email}</td>
-                                  <td><span className={`badge role ${u.role==='admin'?'admin-badge':'user-badge'}`}>{u.role}</span></td>
                                   <td>
-                                    <select className="status-select" value={u.role} onChange={(e)=>handleUserRoleChange(u._id, e.target.value)} disabled={u._id===userData._id}>
-                                      <option value="user">User</option>
-                                      <option value="admin">Admin</option>
-                                    </select>
+                                    <span className={`badge role ${u.role === 'superadmin' ? 'superadmin-badge' : (u.role === 'admin' ? 'admin-badge' : 'user-badge')}`}>
+                                      {u.role === 'superadmin' ? 'Super Admin' : (u.role === 'admin' ? 'Admin' : 'User')}
+                                    </span>
+                                  </td>
+                                  <td>
+                                    {isSuperAdmin ? (
+                                      <select className="status-select" value={u.role} onChange={(e)=>handleUserRoleChange(u._id, e.target.value)} disabled={u._id===userData._id}>
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="superadmin">Super Admin</option>
+                                      </select>
+                                    ) : (
+                                      <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic' }}>Super Admin Only</span>
+                                    )}
                                   </td>
                                 </tr>
                             ))}
@@ -1344,7 +1370,7 @@ const AdminPanel = () => {
             </div>
         )}
         {/* TRANSACTIONS */}
-        {activeTab === 'transactions' && (
+        {activeTab === 'transactions' && isSuperAdmin && (
           <div className="panel-section">
               <div className="orders-title-row">
                 <h2>My Transactions</h2>
@@ -1443,6 +1469,8 @@ const AdminPanel = () => {
                     <label>Payment Method</label>
                     <select value={transactionForm.paymentMethod} onChange={(e) => setTransactionForm({ ...transactionForm, paymentMethod: e.target.value })}>
                       <option value="cash">Cash</option>
+                      <option value="instapay">InstaPay</option>
+                      <option value="bank transfer">Bank Transfer</option>
                       <option value="visa">Visa</option>
                     </select>
                   </div>
@@ -1482,10 +1510,18 @@ const AdminPanel = () => {
                                 <td><strong>{t.amount} EGP</strong></td>
                                 <td>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <span className={`badge ${t.paymentMethod === 'visa' ? 'completed' : 'pending'}`}>
-                                      {t.paymentMethod.toUpperCase()}
+                                    <span className={`badge ${t.paymentMethod === 'visa' || t.paymentMethod === 'instapay' || t.paymentMethod === 'bank transfer' ? 'completed' : 'pending'}`}>
+                                      {t.paymentMethod ? t.paymentMethod.toUpperCase() : 'CASH'}
                                     </span>
-                                    {t.paymentMethod === 'visa' ? <CreditCardIcon clientName={t.clientName} /> : <WalletIcon />}
+                                    {t.paymentMethod === 'visa' ? (
+                                      <CreditCardIcon clientName={t.clientName} />
+                                    ) : t.paymentMethod === 'instapay' ? (
+                                      <InstaPayIcon />
+                                    ) : t.paymentMethod === 'bank transfer' ? (
+                                      <BankTransferIcon />
+                                    ) : (
+                                      <WalletIcon />
+                                    )}
                                   </div>
                                 </td>
                                 <td>

@@ -100,7 +100,12 @@ const CategoriesTab = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.slug) return notify.error('Name and slug are required');
+    if (!form.name?.trim()) {
+      return notify.error('Category Name is required');
+    }
+    if (!form.slug?.trim()) {
+      return notify.error('Category Slug is required');
+    }
     setLoading(true);
     try {
       const fd = new FormData();
@@ -142,11 +147,12 @@ const CategoriesTab = () => {
   };
 
   const handleReorder = async (index, direction) => {
-    if (direction === -1 && index === 0) return;
-    if (direction === 1 && index === categories.length - 1) return;
     const list = [...categories];
-    [list[index], list[index + direction]] = [list[index + direction], list[index]];
-    list.forEach((item, i) => { item.order = i; });
+    if (direction === -1 && index === 0) return;
+    if (direction === 1 && index === list.length - 1) return;
+    const targetIndex = index + direction;
+    const [moved] = list.splice(index, 1);
+    list.splice(targetIndex, 0, moved);
     setCategories(list);
     try {
       await axios.put(`${API}/categories/reorder`, { reorderedItems: list.map(c => ({ id: c._id, order: c.order })) }, getAuthConfig());
@@ -158,7 +164,7 @@ const CategoriesTab = () => {
       {/* Form */}
       <div className="cms-form-card">
         <h3 className="cms-form-title">{editingId ? '✏️ Edit Category' : '➕ New Category'}</h3>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="cms-form-grid">
             <div className="cms-field">
               <label>Category Name *</label>
@@ -271,9 +277,29 @@ const ProjectsTab = () => {
   const [galleryPreviews, setGalleryPreviews] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({
+    active: false,
+    percentage: 0,
+    loadedMB: '0.0',
+    totalMB: '0.0',
+    speedMB: '0.0',
+    estimatedTime: '',
+    statusText: ''
+  });
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const clientDropdownRef = useRef(null);
   const galleryInputRef = useRef(null);
+  const abortControllerRef = useRef(null);
+
+  const handleCancelUpload = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort('Upload cancelled by user');
+      abortControllerRef.current = null;
+    }
+    setLoading(false);
+    setUploadProgress({ active: false, percentage: 0, loadedMB: '0.0', totalMB: '0.0', speedMB: '0.0', estimatedTime: '', statusText: '' });
+    notify.info('Upload cancelled');
+  };
 
   const load = async () => {
     const [pRes, cRes] = await Promise.all([
@@ -350,8 +376,23 @@ const ProjectsTab = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title || !form.slug || !form.categoryId || !form.description || !form.date) {
-      return notify.error('Please fill all required fields');
+    if (!form.title?.trim()) {
+      return notify.error('Project Title is required');
+    }
+    if (!form.categoryId) {
+      return notify.error('Category is required');
+    }
+    if (!form.clientName?.trim()) {
+      return notify.error('Client Name is required');
+    }
+    if (!form.date) {
+      return notify.error('Date is required');
+    }
+    if (!form.description?.trim()) {
+      return notify.error('Description is required');
+    }
+    if (!coverFile && !coverPreview) {
+      return notify.error('Coverage Photo (Thumbnail) is required');
     }
 
     if (form.externalLink && !isValidYoutubeVimeo(form.externalLink)) {
@@ -372,6 +413,62 @@ const ProjectsTab = () => {
     }
 
     setLoading(true);
+    const startTime = Date.now();
+    abortControllerRef.current = new AbortController();
+
+    setUploadProgress({
+      active: true,
+      percentage: 0,
+      loadedMB: '0.0',
+      totalMB: '0.0',
+      speedMB: '0.0',
+      estimatedTime: 'Calculating...',
+      statusText: 'Preparing upload...'
+    });
+
+    const uploadConfig = {
+      ...getAuthConfig(),
+      signal: abortControllerRef.current.signal,
+      onUploadProgress: (progressEvent) => {
+        const { loaded, total } = progressEvent;
+        if (!total) return;
+
+        const percentage = Math.round((loaded * 100) / total);
+        const elapsedTimeSec = (Date.now() - startTime) / 1000;
+        const speedBytesPerSec = elapsedTimeSec > 0 ? loaded / elapsedTimeSec : 0;
+
+        const remainingBytes = total - loaded;
+        const remainingSeconds = speedBytesPerSec > 0 ? Math.ceil(remainingBytes / speedBytesPerSec) : 0;
+
+        let etaStr = '';
+        if (percentage >= 100) {
+          etaStr = 'Processing on server...';
+        } else if (remainingSeconds < 60) {
+          etaStr = `~${remainingSeconds} sec remaining`;
+        } else {
+          const mins = Math.floor(remainingSeconds / 60);
+          const secs = remainingSeconds % 60;
+          etaStr = `~${mins}m ${secs}s remaining`;
+        }
+
+        const loadedFormatted = (loaded / (1024 * 1024)).toFixed(1);
+        const totalFormatted = (total / (1024 * 1024)).toFixed(1);
+        const speedFormatted = (speedBytesPerSec / (1024 * 1024)).toFixed(1);
+
+        setUploadProgress({
+          active: true,
+          percentage,
+          loadedMB: loadedFormatted,
+          totalMB: totalFormatted,
+          speedMB: speedFormatted,
+          estimatedTime: etaStr,
+          statusText: percentage >= 100 
+            ? 'Optimizing gallery & saving to database...' 
+            : (projectMediaLayout === 'gallery' ? `Uploading photo gallery (${galleryFiles.length} photos)...` : 'Uploading project media...')
+        });
+      }
+    };
+
     try {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => fd.append(k, v));
@@ -385,18 +482,24 @@ const ProjectsTab = () => {
       if (coverFile) fd.append('coverImage', coverFile);
 
       if (editingId) {
-        await axios.put(`${API}/projects/${editingId}`, fd, getAuthConfig());
+        await axios.put(`${API}/projects/${editingId}`, fd, uploadConfig);
         notify.success('Project updated');
       } else {
-        await axios.post(`${API}/projects`, fd, getAuthConfig());
+        await axios.post(`${API}/projects`, fd, uploadConfig);
         notify.success('Project created');
       }
       resetForm();
       load();
     } catch (err) {
-      notify.error(err.response?.data?.message || 'Failed to save project');
+      if (axios.isCancel(err) || err?.name === 'CanceledError' || err?.message?.includes('cancelled')) {
+        notify.info('Upload cancelled');
+      } else {
+        notify.error(err.response?.data?.message || 'Failed to save project');
+      }
     } finally {
       setLoading(false);
+      setUploadProgress({ active: false, percentage: 0, loadedMB: '0.0', totalMB: '0.0', speedMB: '0.0', estimatedTime: '', statusText: '' });
+      abortControllerRef.current = null;
     }
   };
 
@@ -470,7 +573,7 @@ const ProjectsTab = () => {
       {/* Form */}
       <div className="cms-form-card">
         <h3 className="cms-form-title">{editingId ? '✏️ Edit Project' : '➕ New Project'}</h3>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="cms-form-grid">
             <div className="cms-field">
               <label>Project Title *</label>
@@ -491,12 +594,13 @@ const ProjectsTab = () => {
               </select>
             </div>
             <div className="cms-field" style={{ position: 'relative' }} ref={clientDropdownRef}>
-              <label>Client Name</label>
+              <label>Client Name *</label>
               <input
                 className="form-control"
                 placeholder="Search registered client…"
                 value={form.clientName}
                 autoComplete="off"
+                required
                 onChange={e => {
                   setForm(f => ({ ...f, clientName: e.target.value }));
                   setShowClientDropdown(true);
@@ -556,7 +660,7 @@ const ProjectsTab = () => {
                 onChange={e => setForm(f => ({ ...f, externalLink: e.target.value }))} />
             </div>
             <div className="cms-field" style={{ gridColumn: 'span 1' }}>
-              <label><FiImage style={{ verticalAlign: 'middle', marginRight: 4 }} />Coverage Photo (Thumbnail)</label>
+              <label><FiImage style={{ verticalAlign: 'middle', marginRight: 4 }} />Coverage Photo (Thumbnail) *</label>
               <UploadZone
                 accept="image/*"
                 label="Upload a cover photo for this project"
@@ -704,12 +808,46 @@ const ProjectsTab = () => {
           </div>
           <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Saving...' : (editingId ? 'Update Project' : 'Create Project')}
+              {loading ? (uploadProgress.active ? `Uploading (${uploadProgress.percentage}%)...` : 'Saving...') : (editingId ? 'Update Project' : 'Create Project')}
             </button>
             {editingId && (
-              <button type="button" className="btn btn-secondary" onClick={resetForm}>Cancel</button>
+              <button type="button" className="btn btn-secondary" onClick={resetForm} disabled={loading}>Cancel</button>
             )}
           </div>
+
+          {uploadProgress.active && (
+            <div className="upload-progress-card">
+              <div className="upload-progress-header">
+                <span className="upload-progress-title">
+                  <span className="spinner-border spinner-border-sm" role="status" style={{ width: 14, height: 14, borderWidth: 2, marginRight: 8, display: 'inline-block' }} />
+                  {uploadProgress.statusText}
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span className="upload-progress-eta">{uploadProgress.estimatedTime}</span>
+                  <button
+                    type="button"
+                    className="btn-cancel-upload"
+                    onClick={handleCancelUpload}
+                    title="Cancel upload"
+                  >
+                    ✕ Cancel
+                  </button>
+                </div>
+              </div>
+
+              <div className="upload-progress-bar-bg">
+                <div 
+                  className="upload-progress-bar-fill" 
+                  style={{ width: `${uploadProgress.percentage}%` }}
+                />
+              </div>
+
+              <div className="upload-progress-footer">
+                <span>{uploadProgress.loadedMB} / {uploadProgress.totalMB} MB ({uploadProgress.percentage}%)</span>
+                <span>Speed: {uploadProgress.speedMB} MB/s</span>
+              </div>
+            </div>
+          )}
         </form>
       </div>
 

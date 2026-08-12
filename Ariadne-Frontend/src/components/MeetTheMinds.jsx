@@ -1,16 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-    FaCamera, 
-    FaFilm, 
-    FaWandMagicSparkles, 
-    FaVideo, 
-    FaMicrophone, 
-    FaPenNib, 
-    FaPalette, 
-    FaMusic, 
-    FaBullhorn 
+import {
+    FaCamera,
+    FaFilm,
+    FaWandMagicSparkles,
+    FaVideo,
+    FaMicrophone,
+    FaPenNib,
+    FaPalette,
+    FaMusic,
+    FaBullhorn,
+    FaBriefcase,
+    FaClipboardList
 } from 'react-icons/fa6';
+import { GiSoundWaves } from 'react-icons/gi';
+import { LuClapperboard } from 'react-icons/lu';
 import './MeetTheMinds.css';
 
 import imgLeo from '../assets/meet-the-minds/Léonardo HANNA.jpg';
@@ -23,76 +27,28 @@ import imgMaria from '../assets/meet-the-minds/Maria ARTINE.jpg';
 
 const TEAM_MEMBERS = [
     {
-        id: 'leo',
-        name: 'Léonardo HANNA',
-        role: 'Director',
-        badge: 'DIRECTING',
-        bio: 'Léonardo brings a sharp vision and precision to set direction. He leads Ariadne\'s cinematic productions, bridging raw human emotion and powerful storylines into high-end films that resonate with audiences.',
-        img: imgLeo,
-        accentColor: '#7c3aed',
-        icon: FaVideo,
-        cameraSpecs: ['ISO 100  |  85mm  |  f/1.2', '1/250s  |  5.6K RAW'],
-        gradientColors: ['#7c3aed', '#a78bfa'],
-    },
-    {
-        id: 'pierre',
-        name: 'Pierre TOMA',
-        role: 'Sound Engineer',
-        badge: 'SOUND DEPT',
-        bio: 'Pierre commands the auditory dimension of Ariadne\'s films. From on-set boom and lavalier recording to complex multi-layered sound design, creative mixing, and clean mastering, he ensures every story is heard clearly.',
-        img: imgPierre,
-        accentColor: '#1392d6',
-        icon: FaMicrophone,
-        cameraSpecs: ['ISO 800  |  35mm  |  T/1.5', '1/50s  |  24fps  |  8K'],
-        gradientColors: ['#1392d6', '#60a5fa'],
-    },
-    {
-        id: 'fady',
-        name: 'Fady BARSSOUM',
-        role: 'Director of Photography',
-        badge: 'CINEMATOGRAPHY',
-        bio: 'Fady directs the camera and lighting department, crafting Ariadne\'s distinct visual identity. His precise compositions, lens choices, and light choreography bring depth and cinematic realism to every scene.',
-        img: imgFady,
-        accentColor: '#10b981',
-        icon: FaCamera,
-        cameraSpecs: ['REC.709  |  DCI-P3  |  12-BIT', 'DAVINCI RESOLVE Studio'],
-        gradientColors: ['#10b981', '#34d399'],
-    },
-    {
         id: 'ramsis',
         name: 'Ramsis HANNA',
-        role: 'Storyboard Artist',
-        badge: 'CREATIVE ART',
-        bio: 'Ramsis maps the visual blueprints of our productions. By converting scripts into detailed, expressive storyboard panels, he orchestrates camera blocking, action sequences, and visual flow before shooting begins.',
+        role: 'Executive Producer',
+        badge: 'EXECUTIVE PRODUCER',
+        bio: 'Ramsis leads Ariadne\'s executive production and visual strategy, overseeing project development, creative direction, and cinematic execution from inception to final delivery.',
         img: imgRamsis,
         accentColor: '#ff6b35',
-        icon: FaPenNib,
+        icon: FaBriefcase,
         cameraSpecs: ['ARRI Alexa Mini  |  RED V-Raptor', 'PRODUCTION DEPT  |  SET-01'],
         gradientColors: ['#ff6b35', '#f97316'],
     },
     {
-        id: 'samah',
-        name: 'Samah TADROS',
-        role: 'Set Designer',
-        badge: 'SET DESIGN',
-        bio: 'Samah constructs the physical environments that form the backdrops of Ariadne\'s films. By orchestrating set architecture, interior props, and color palettes, she builds immersive, textured worlds inside every frame.',
-        img: imgSamah,
-        accentColor: '#ec4899',
-        icon: FaPalette,
-        cameraSpecs: ['MOOD BOARD 03  |  PALETTE A', 'ART DIRECTION & STYLING'],
-        gradientColors: ['#ec4899', '#f472b6'],
-    },
-    {
-        id: 'john',
-        name: 'John ZAKI',
-        role: 'Music Composer',
-        badge: 'COMPOSITION',
-        bio: 'John composes original musical scores and emotional soundtracks that drive Ariadne\'s stories forward. Utilizing symphonic depth and modern synthesizers, his compositions capture the mood and tempo of each production.',
-        img: imgJohn,
-        accentColor: '#e0a96d',
-        icon: FaMusic,
-        cameraSpecs: ['M18 HMI  |  Skypanel S60-C', 'FREEFLY Alta X  |  DJI Inspire 3'],
-        gradientColors: ['#e0a96d', '#f5d0a9'],
+        id: 'leo',
+        name: 'Léonardo HANNA',
+        role: 'Creative Director',
+        badge: 'CREATIVE DIRECTION',
+        bio: 'Léonardo brings a sharp vision and precision to set direction. He leads Ariadne\'s cinematic productions, bridging raw human emotion and powerful storylines into high-end films that resonate with audiences.',
+        img: imgLeo,
+        accentColor: '#7c3aed',
+        icon: LuClapperboard,
+        cameraSpecs: ['ISO 100  |  85mm  |  f/1.2', '1/250s  |  5.6K RAW'],
+        gradientColors: ['#7c3aed', '#a78bfa'],
     },
     {
         id: 'maria',
@@ -105,6 +61,54 @@ const TEAM_MEMBERS = [
         icon: FaBullhorn,
         cameraSpecs: ['PROD SCHEDULE  |  CALL SHEET 02', 'CLIENT COLLABORATION'],
         gradientColors: ['#8b5cf6', '#c084fc'],
+    },
+    {
+        id: 'fady',
+        name: 'Fady BARSSOUM',
+        role: 'Director Of Photography',
+        badge: 'CINEMATOGRAPHY',
+        bio: 'Leads Ariadne\'s camera and lighting department, overseeing visual storytelling across commercials, brand films, and digital content. His technical expertise in cinematography, and on-set workflow ensures every frame is polished, cinematic, and aligned with the client\'s vision.',
+        img: imgFady,
+        accentColor: '#10b981',
+        icon: FaCamera,
+        cameraSpecs: ['REC.709  |  DCI-P3  |  12-BIT', 'DAVINCI RESOLVE Studio'],
+        gradientColors: ['#10b981', '#34d399'],
+    },
+    {
+        id: 'samah',
+        name: 'Samah TADROS',
+        role: 'Production Manager',
+        badge: 'PRODUCTION',
+        bio: 'Samah coordinates set logistics, scheduling, and production operations for Ariadne\'s projects, ensuring seamless execution across departments and keeping every shoot running flawlessly.',
+        img: imgSamah,
+        accentColor: '#ec4899',
+        icon: FaClipboardList,
+        cameraSpecs: ['MOOD BOARD 03  |  PALETTE A', 'ART DIRECTION & STYLING'],
+        gradientColors: ['#ec4899', '#f472b6'],
+    },
+    {
+        id: 'pierre',
+        name: 'Pierre TOMA',
+        role: 'Sound Engineer',
+        badge: 'SOUND DEPT',
+        bio: 'Pierre commands the auditory dimension of Ariadne\'s films. From on-set boom and lavalier recording to complex multi-layered sound design, creative mixing, and clean mastering, he ensures every story is heard clearly.',
+        img: imgPierre,
+        accentColor: '#1392d6',
+        icon: GiSoundWaves,
+        cameraSpecs: ['ISO 800  |  35mm  |  T/1.5', '1/50s  |  24fps  |  8K'],
+        gradientColors: ['#1392d6', '#60a5fa'],
+    },
+    {
+        id: 'john',
+        name: 'John ZAKI',
+        role: 'Music Composer',
+        badge: 'COMPOSITION',
+        bio: 'Crafting original music that transforms ideas into memorable sonic experiences. Every score is composed to elevate the story, strengthen the brand’s identity, and create an emotional connection with the audience. From the first creative concept to the final mix, every note is designed with purpose and impact.',
+        img: imgJohn,
+        accentColor: '#e0a96d',
+        icon: FaMusic,
+        cameraSpecs: ['M18 HMI  |  Skypanel S60-C', 'FREEFLY Alta X  |  DJI Inspire 3'],
+        gradientColors: ['#e0a96d', '#f5d0a9'],
     }
 ];
 
@@ -140,13 +144,13 @@ export default function MeetTheMinds() {
                                 key={member.id}
                                 className={`mtm-row ${isEven ? 'row-left' : 'row-right'}`}
                             >
-                                {/* Image Box */}
+                                {/* Image Box - Enters first */}
                                 <motion.div
                                     className="mtm-img-col"
-                                    initial={{ opacity: 0, x: isEven ? -90 : 90 }}
+                                    initial={{ opacity: 0, x: isEven ? -60 : 60 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: '-80px' }}
-                                    transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1] }}
+                                    viewport={{ once: true, amount: 0.1 }}
+                                    transition={{ duration: 0.85, delay: 0, ease: [0.22, 1, 0.36, 1] }}
                                 >
                                     <div className="mtm-img-card">
                                         <img src={member.img} alt={member.name} className="mtm-img" />
@@ -157,17 +161,28 @@ export default function MeetTheMinds() {
                                     </div>
                                 </motion.div>
 
-                                {/* Content Box */}
+                                {/* Content Box - Enters second from opposite side */}
                                 <motion.div
                                     className="mtm-content-col"
-                                    initial={{ opacity: 0, x: isEven ? 90 : -90 }}
+                                    initial={{ opacity: 0, x: isEven ? 60 : -60 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: '-80px' }}
-                                    transition={{ duration: 1.3, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                                    viewport={{ once: true, amount: 0.1 }}
+                                    transition={{ duration: 0.85, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
                                 >
                                     <div className="mtm-content-inner">
-                                        <div className="mtm-icon-tag" style={{ color: member.accentColor }}>
-                                            <IconComponent size={20} />
+                                        <div
+                                            className={`mtm-icon-tag ${member.id === 'pierre' ? 'mtm-soundwave-active' : ''} ${member.id === 'leo' ? 'mtm-clapper-active' : ''}`}
+                                            style={{ color: member.accentColor }}
+                                        >
+                                            <IconComponent size={member.id === 'pierre' ? 24 : 20} />
+                                            {member.id === 'pierre' && (
+                                                <div className="mtm-soundwave-bars">
+                                                    <span className="bar"></span>
+                                                    <span className="bar"></span>
+                                                    <span className="bar"></span>
+                                                    <span className="bar"></span>
+                                                </div>
+                                            )}
                                         </div>
                                         <h3 className="mtm-name">
                                             {firstName}{' '}
