@@ -19,12 +19,6 @@ const CategoryProjects = () => {
     const [activePanelId, setActivePanelId] = useState(null);
 
     useEffect(() => {
-        if (projects.length > 0 && !activePanelId) {
-            setActivePanelId(projects[0]._id);
-        }
-    }, [projects, activePanelId]);
-
-    useEffect(() => {
         const fetchProjects = async () => {
             try {
                 const response = await axios.get(`${API_URL}/api/portfolio/projects/${categorySlug}`);
@@ -57,7 +51,7 @@ const CategoryProjects = () => {
             <div className="portfolio-container">
                 <div className="container text-center py-5">
                     <h2>Category not found</h2>
-                    <Link to="/packages" className="btn btn-primary mt-3">Back to Portfolio</Link>
+                    <Link to="/portfolio" className="btn btn-primary mt-3">Back to Portfolio</Link>
                 </div>
             </div>
         );
@@ -66,7 +60,7 @@ const CategoryProjects = () => {
     return (
         <div className="portfolio-container">
             <div className="container">
-                <Link to="/packages" className="back-link">← Back to Portfolio</Link>
+                <Link to="/portfolio" className="back-link">← Back to Portfolio</Link>
                 <h1 className="portfolio-title">{category.name}</h1>
                 <p className="portfolio-subtitle">{category.description}</p>
 

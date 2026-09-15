@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { notify } from "../utils/notify";
 import "./Login.css";
@@ -99,7 +99,7 @@ const Login = () => {
             localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(user));
             emitAuthChanged();
-            notify.success("Success - Login successful!");
+            notify.success("Login successfully");
             setTimeout(() => {
                 if (user && (user.role === 'admin' || user.role === 'superadmin')) {
                     window.location.href = "/admin";
@@ -123,7 +123,8 @@ const Login = () => {
      */
     const handleGoogleAuth = (e) => {
         e.preventDefault();
-        window.location.href = `${API_URL}/api/auth/google`;
+        const returnUrl = encodeURIComponent(window.location.origin);
+        window.location.href = `${API_URL}/api/auth/google?returnUrl=${returnUrl}`;
     };
 
     return (
@@ -210,9 +211,9 @@ const Login = () => {
                             )}
                         </div>
 
-                        <a href="/forgot-password" style={{ marginTop: "15px", marginBottom: "10px" }}>
+                        <Link to="/forgot-password" style={{ marginTop: "15px", marginBottom: "10px" }}>
                             Forget Your Password?
-                        </a>
+                        </Link>
 
                         <button type="submit" disabled={isLoading}>{isLoading ? "Loading..." : "Sign In"}</button>
 

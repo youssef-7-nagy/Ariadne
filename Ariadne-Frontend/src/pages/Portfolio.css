@@ -958,10 +958,10 @@ html.dark .portfolio-subtitle {
     -webkit-tap-highlight-color: transparent;
 }
 
-.expanding-gallery > .gallery-panel:hover,
-.expanding-gallery > .gallery-panel:active,
-.expanding-gallery > .gallery-panel:focus,
-.expanding-gallery > .gallery-panel.active {
+.expanding-gallery>.gallery-panel:hover,
+.expanding-gallery>.gallery-panel:active,
+.expanding-gallery>.gallery-panel:focus,
+.expanding-gallery>.gallery-panel.active {
     flex: 4;
 }
 
