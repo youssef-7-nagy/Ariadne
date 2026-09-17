@@ -162,12 +162,31 @@ const Home = () => {
                         {/* CTAs */}
                         <div className="hero-cta-row">
                             <Link to="/portfolio" className="hero-btn-primary">
-                                <span>View Portfolio</span>
+                                <span>View Projects</span>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M5 12H19M19 12L12 5M19 12L12 19"/>
                                 </svg>
                             </Link>
-                            <Link to="/packages" className="hero-btn-ghost">Book a Session</Link>
+                            <a 
+                                href="#footer" 
+                                className="hero-btn-cool-contact"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    const footer = document.getElementById('footer');
+                                    if (footer) {
+                                        footer.scrollIntoView({ behavior: 'smooth' });
+                                        setTimeout(() => {
+                                            const magicMenu = document.querySelector('.magic-menu');
+                                            if (magicMenu) {
+                                                magicMenu.classList.add('force-open');
+                                                setTimeout(() => magicMenu.classList.remove('force-open'), 3000);
+                                            }
+                                        }, 800);
+                                    }
+                                }}
+                            >
+                                Contact Us
+                            </a>
                         </div>
 
                         {/* Stats */}
@@ -200,19 +219,13 @@ const Home = () => {
 
                             <img src={imgAboutStory} alt="Ariadne Photographer" className="hero-framed-photo" />
 
-                            <div className="hero-frame-tag">
-                                <span className="tag-dot"></span>
-                                <span>BTS · BEHIND THE LENS</span>
-                            </div>
+
                         </div>
                     </div>
 
                 </div>
 
-                {/* === Vertical side label === */}
-                <div className="hero-side-label">
-                    <span>CAPTURING MOMENTS · CRAFTING MEMORIES</span>
-                </div>
+
 
                 {/* === Scroll indicator === */}
                 <div className="hero-scroll">

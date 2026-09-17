@@ -114,7 +114,7 @@ exports.getProjects = async (req, res) => {
 
 exports.createProject = async (req, res) => {
   try {
-    const { title, slug, categoryId, description, date, clientName, tags, externalLink, mediaType } = req.body;
+    const { title, slug, categoryId, description, date, clientName, tags, externalLink, youtubeUrl, mediaType } = req.body;
 
     // ── Mandatory cover image validation ──
     if (!req.files || !req.files['coverImage'] || req.files['coverImage'].length === 0) {
@@ -124,10 +124,8 @@ exports.createProject = async (req, res) => {
       });
     }
 
-    const [media, coverImage] = await Promise.all([
-      processMedia(req.files, req.body),
-      processCoverImage(req.files)
-    ]);
+    const coverImage = await processCoverImage(req.files);
+    const media = await processMedia(req.files, req.body, coverImage);
 
     console.log(`[createProject] Cover image optimized: ${coverImage}`);
 
@@ -137,6 +135,7 @@ exports.createProject = async (req, res) => {
       description, date,
       clientName,
       externalLink,
+      youtubeUrl: youtubeUrl || undefined,
       mediaType: mediaType || 'video',
       tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       media,
@@ -151,7 +150,10 @@ exports.createProject = async (req, res) => {
 
 exports.updateProject = async (req, res) => {
   try {
-    const { title, slug, categoryId, description, date, clientName, tags, externalLink, mediaType } = req.body;
+    const { title, slug, categoryId, description, date, clientName, tags, externalLink, youtubeUrl, mediaType } = req.body;
+
+    const existingProject = await Project.findById(req.params.id);
+    if (!existingProject) return res.status(404).json({ success: false, message: 'Project not found' });
 
     const update = {
       title, slug,
@@ -159,27 +161,33 @@ exports.updateProject = async (req, res) => {
       description, date,
       clientName,
       externalLink,
+      youtubeUrl: youtubeUrl || undefined,
       mediaType: mediaType || 'video',
       tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : []
     };
-
-    if (req.files && (req.files['media'] || req.files['videoThumbnail']) || req.body.embedUrl) {
-      const newMedia = await processMedia(req.files, req.body);
-      if (newMedia.length > 0) {
-        update.media = newMedia;
-      } else if (req.files && req.files['videoThumbnail']) {
-        const thumbFile = req.files['videoThumbnail'][0];
-        update['media.0.thumbnailUrl'] = await optimizeCoverImage(thumbFile.filename);
-      }
-    }
 
     const coverImage = await processCoverImage(req.files);
     if (coverImage) {
       update.coverImage = coverImage;
     }
 
+    const effectiveCover = coverImage || existingProject.coverImage;
+
+    if (req.files && (req.files['media'] || req.files['videoThumbnail']) || req.body.embedUrl) {
+      const newMedia = await processMedia(req.files, req.body, effectiveCover);
+      if (newMedia.length > 0) {
+        update.media = newMedia;
+      } else if (req.files && req.files['videoThumbnail']) {
+        const thumbFile = req.files['videoThumbnail'][0];
+        const thumbUrl = await optimizeCoverImage(thumbFile.filename);
+        if (existingProject.media && existingProject.media.length > 0) {
+          existingProject.media[0].thumbnailUrl = thumbUrl;
+          update.media = existingProject.media;
+        }
+      }
+    }
+
     const project = await Project.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: true });
-    if (!project) return res.status(404).json({ success: false, message: 'Project not found' });
     res.json({ success: true, data: project });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });

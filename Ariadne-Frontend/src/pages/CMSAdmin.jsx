@@ -66,6 +66,13 @@ const isValidEmbed = (input) => {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const slugify = (str) =>
   str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const toTitleCase = (str) => {
+  if (!str) return '';
+  return str.replace(/(^|\s)([a-z\u00C0-\u024F])/g, (match, space, char) => {
+    return space + char.toUpperCase();
+  });
+};
 // ─── CATEGORIES CMS ──────────────────────────────────────────────────────────
 
 const CategoriesTab = () => {
@@ -90,8 +97,10 @@ const CategoriesTab = () => {
     setEditingId(null);
   };
 
-  const handleNameChange = (val) =>
-    setForm(f => ({ ...f, name: val, slug: editingId ? f.slug : slugify(val) }));
+  const handleNameChange = (val) => {
+    const formatted = toTitleCase(val);
+    setForm(f => ({ ...f, name: formatted, slug: slugify(formatted) }));
+  };
 
   const handleFileSelect = (file) => {
     setCoverFile(file);
@@ -103,14 +112,12 @@ const CategoriesTab = () => {
     if (!form.name?.trim()) {
       return notify.error('Category Name is required');
     }
-    if (!form.slug?.trim()) {
-      return notify.error('Category Slug is required');
-    }
+    const finalSlug = form.slug || slugify(form.name);
     setLoading(true);
     try {
       const fd = new FormData();
       fd.append('name', form.name);
-      fd.append('slug', form.slug);
+      fd.append('slug', finalSlug);
       fd.append('description', form.description);
       if (coverFile) fd.append('coverImage', coverFile);
 
@@ -166,15 +173,10 @@ const CategoriesTab = () => {
         <h3 className="cms-form-title">{editingId ? '✏️ Edit Category' : '➕ New Category'}</h3>
         <form onSubmit={handleSubmit} noValidate>
           <div className="cms-form-grid">
-            <div className="cms-field">
+            <div className="cms-field" style={{ gridColumn: 'span 2' }}>
               <label>Category Name *</label>
               <input className="form-control" placeholder="e.g. Photography" value={form.name}
                 onChange={e => handleNameChange(e.target.value)} required />
-            </div>
-            <div className="cms-field">
-              <label>Slug *</label>
-              <input className="form-control" placeholder="e.g. photography" value={form.slug}
-                onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} required />
             </div>
             <div className="cms-field" style={{ gridColumn: 'span 2' }}>
               <label>Description</label>
@@ -263,7 +265,7 @@ const ProjectsTab = () => {
 
   const [form, setForm] = useState({
     title: '', slug: '', categoryId: '', description: '',
-    date: '', clientName: '', tags: '', externalLink: '', embedUrl: ''
+    date: '', clientName: '', tags: '', externalLink: '', youtubeUrl: '', embedUrl: ''
   });
   const [projectMediaLayout, setProjectMediaLayout] = useState('video'); // 'video' | 'gallery'
   const [mediaFile, setMediaFile] = useState(null);
@@ -338,7 +340,7 @@ const ProjectsTab = () => {
   useEffect(() => { load(); }, []);
 
   const resetForm = () => {
-    setForm({ title: '', slug: '', categoryId: '', description: '', date: '', clientName: '', tags: '', externalLink: '', embedUrl: '' });
+    setForm({ title: '', slug: '', categoryId: '', description: '', date: '', clientName: '', tags: '', externalLink: '', youtubeUrl: '', embedUrl: '' });
     setProjectMediaLayout('video');
     setMediaFile(null);
     setMediaPreview('');
@@ -352,8 +354,10 @@ const ProjectsTab = () => {
     setEditingId(null);
   };
 
-  const handleTitleChange = (val) =>
-    setForm(f => ({ ...f, title: val, slug: editingId ? f.slug : slugify(val) }));
+  const handleTitleChange = (val) => {
+    const formatted = toTitleCase(val);
+    setForm(f => ({ ...f, title: formatted, slug: slugify(formatted) }));
+  };
 
   const handleMediaSelect = (file) => {
     const isVideo = file.type.startsWith('video/');
@@ -470,8 +474,12 @@ const ProjectsTab = () => {
     };
 
     try {
+      const finalForm = {
+        ...form,
+        slug: form.slug || slugify(form.title || '')
+      };
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => fd.append(k, v));
+      Object.entries(finalForm).forEach(([k, v]) => fd.append(k, v));
       fd.append('mediaType', projectMediaLayout);
       if (projectMediaLayout === 'gallery') {
         galleryFiles.forEach(f => fd.append('media', f));
@@ -515,7 +523,8 @@ const ProjectsTab = () => {
       date: p.date ? new Date(p.date).toISOString().split('T')[0] : '',
       clientName: p.clientName || '',
       tags: p.tags?.join(', ') || '',
-      externalLink: p.externalLink || '',
+      externalLink: p.externalLink || p.youtubeUrl || '',
+      youtubeUrl: p.externalLink || p.youtubeUrl || '',
       embedUrl: p.media?.[0]?.url?.includes('http') ? p.media[0].url : ''
     });
     const featured = p.media?.[0];
@@ -581,11 +590,6 @@ const ProjectsTab = () => {
                 onChange={e => handleTitleChange(e.target.value)} required />
             </div>
             <div className="cms-field">
-              <label>Slug *</label>
-              <input className="form-control" placeholder="e.g. tedx-event-recap" value={form.slug}
-                onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} required />
-            </div>
-            <div className="cms-field">
               <label>Category *</label>
               <select className="form-control" value={form.categoryId}
                 onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))} required>
@@ -644,11 +648,6 @@ const ProjectsTab = () => {
               <input type="date" className="form-control" value={form.date}
                 onChange={e => setForm(f => ({ ...f, date: e.target.value }))} required />
             </div>
-            <div className="cms-field">
-              <label>Tags (comma separated)</label>
-              <input className="form-control" placeholder="e.g. film, event, documentary" value={form.tags}
-                onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} />
-            </div>
             <div className="cms-field" style={{ gridColumn: 'span 2' }}>
               <label>Description *</label>
               <textarea className="form-control" rows={3} placeholder="What did the company do for the client..."
@@ -656,8 +655,9 @@ const ProjectsTab = () => {
             </div>
             <div className="cms-field" style={{ gridColumn: 'span 2' }}>
               <label><FiExternalLink style={{ verticalAlign: 'middle', marginRight: 4 }} />External Link (YouTube / Vimeo)</label>
-              <input className="form-control" placeholder="https://youtube.com/watch?v=..." value={form.externalLink}
-                onChange={e => setForm(f => ({ ...f, externalLink: e.target.value }))} />
+              <input className="form-control" placeholder="https://youtube.com/watch?v=... or https://youtu.be/..." value={form.externalLink}
+                onChange={e => setForm(f => ({ ...f, externalLink: e.target.value, youtubeUrl: e.target.value }))} />
+              <small style={{ color: '#888', marginTop: 4, display: 'block' }}>If provided, a "Watch the full video on YouTube" button will appear on the project page and open directly on YouTube in a new tab.</small>
             </div>
             <div className="cms-field" style={{ gridColumn: 'span 1' }}>
               <label><FiImage style={{ verticalAlign: 'middle', marginRight: 4 }} />Coverage Photo (Thumbnail) *</label>
@@ -792,7 +792,7 @@ const ProjectsTab = () => {
                 </div>
               )}
             </div>
-            {projectMediaLayout === 'video' && mediaType === 'video' && (
+            {projectMediaLayout === 'video' && (
               <div className="cms-field" style={{ gridColumn: 'span 1' }}>
                 <label><FiImage style={{ verticalAlign: 'middle', marginRight: 4 }} />Video Thumbnail (Poster Image)</label>
                 <UploadZone
