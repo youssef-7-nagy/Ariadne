@@ -46,6 +46,7 @@ const getAuthConfig = () => ({
 
 import { MediaPreview } from '../components/admin/MediaPreview';
 import { MediaUploader as UploadZone } from '../components/admin/MediaUploader';
+import OriginImageGallery from '../components/OriginImageGallery';
 
 // URL Validators
 const isValidYoutubeVimeo = (url) => {
@@ -265,7 +266,7 @@ const ProjectsTab = () => {
 
   const [form, setForm] = useState({
     title: '', slug: '', categoryId: '', description: '',
-    date: '', clientName: '', tags: '', externalLink: '', youtubeUrl: '', embedUrl: ''
+    date: '', clientName: '', tags: '', externalLink: '', youtubeUrl: '', embedUrl: '', isPortrait: false
   });
   const [projectMediaLayout, setProjectMediaLayout] = useState('video'); // 'video' | 'gallery'
   const [mediaFile, setMediaFile] = useState(null);
@@ -340,7 +341,7 @@ const ProjectsTab = () => {
   useEffect(() => { load(); }, []);
 
   const resetForm = () => {
-    setForm({ title: '', slug: '', categoryId: '', description: '', date: '', clientName: '', tags: '', externalLink: '', youtubeUrl: '', embedUrl: '' });
+    setForm({ title: '', slug: '', categoryId: '', description: '', date: '', clientName: '', tags: '', externalLink: '', youtubeUrl: '', embedUrl: '', isPortrait: false });
     setProjectMediaLayout('video');
     setMediaFile(null);
     setMediaPreview('');
@@ -525,7 +526,8 @@ const ProjectsTab = () => {
       tags: p.tags?.join(', ') || '',
       externalLink: p.externalLink || p.youtubeUrl || '',
       youtubeUrl: p.externalLink || p.youtubeUrl || '',
-      embedUrl: p.media?.[0]?.url?.includes('http') ? p.media[0].url : ''
+      embedUrl: p.media?.[0]?.url?.includes('http') ? p.media[0].url : '',
+      isPortrait: p.isPortrait || false
     });
     const featured = p.media?.[0];
     setMediaFile(null);
@@ -613,32 +615,48 @@ const ProjectsTab = () => {
               />
               {showClientDropdown && (
                 <div className="custom-dropdown-menu" style={{ zIndex: 999 }}>
-                  {users.filter(u =>
-                    u.name.toLowerCase().includes((form.clientName || '').toLowerCase())
-                  ).length > 0 ? (
-                    users
-                      .filter(u => u.name.toLowerCase().includes((form.clientName || '').toLowerCase()))
-                      .map(u => (
-                        <div
-                          key={u._id}
-                          className="custom-dropdown-item"
-                          onMouseDown={e => {
-                            e.preventDefault();
-                            setForm(f => ({ ...f, clientName: u.name }));
-                            setShowClientDropdown(false);
-                          }}
-                        >
-                          <div className="dropdown-avatar">
-                            {u.name.charAt(0).toUpperCase()}
-                          </div>
-                          <div className="dropdown-info">
-                            <strong>{u.name}</strong>
-                            <span>{u.email}</span>
-                          </div>
+                  {users
+                    .filter(u => u.name.toLowerCase().includes((form.clientName || '').toLowerCase()))
+                    .map(u => (
+                      <div
+                        key={u._id}
+                        className="custom-dropdown-item"
+                        onMouseDown={e => {
+                          e.preventDefault();
+                          setForm(f => ({ ...f, clientName: u.name }));
+                          setShowClientDropdown(false);
+                        }}
+                      >
+                        <div className="dropdown-avatar">
+                          {u.name.charAt(0).toUpperCase()}
                         </div>
-                      ))
-                  ) : (
-                    <div className="custom-dropdown-empty">No matching clients found</div>
+                        <div className="dropdown-info">
+                          <strong>{u.name}</strong>
+                          <span>{u.email}</span>
+                        </div>
+                      </div>
+                    ))}
+                  
+                  {form.clientName?.trim() && !users.some(u => u.name.toLowerCase() === form.clientName.trim().toLowerCase()) && (
+                    <div 
+                      className="custom-dropdown-item"
+                      onMouseDown={e => {
+                        e.preventDefault();
+                        setShowClientDropdown(false);
+                      }}
+                    >
+                      <div className="dropdown-avatar" style={{ background: '#333' }}>
+                        +
+                      </div>
+                      <div className="dropdown-info">
+                        <strong>Use "{form.clientName}"</strong>
+                        <span>Custom client (not registered)</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {!form.clientName?.trim() && users.length === 0 && (
+                    <div className="custom-dropdown-empty">Search or type a client name</div>
                   )}
                 </div>
               )}
@@ -734,29 +752,41 @@ const ProjectsTab = () => {
                     <span style={{ display: 'block', fontSize: '0.8rem', marginTop: 4 }}>You can add multiple photos — they will appear as a navigable gallery</span>
                   </div>
                   {galleryPreviews.length > 0 && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 8 }}>
-                      {galleryPreviews.map((src, i) => (
-                        <div key={i} style={{ position: 'relative', borderRadius: 6, overflow: 'hidden', aspectRatio: '1', background: '#0d1117' }}>
-                          <img src={src} alt={`Gallery ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setGalleryPreviews(p => p.filter((_, j) => j !== i));
-                              setGalleryFiles(p => p.filter((_, j) => j !== i));
-                            }}
-                            style={{
-                              position: 'absolute', top: 3, right: 3,
-                              background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%',
-                              color: '#fff', width: 20, height: 20, display: 'flex', alignItems: 'center',
-                              justifyContent: 'center', cursor: 'pointer', padding: 0, fontSize: 11
-                            }}
-                            aria-label="Remove photo"
-                          >
-                            <FiX />
-                          </button>
-                          {i === 0 && <span style={{ position: 'absolute', bottom: 3, left: 3, background: '#6366f1', color: '#fff', fontSize: '0.6rem', padding: '1px 5px', borderRadius: 3 }}>Cover</span>}
-                        </div>
-                      ))}
+                    <div style={{ marginTop: 16 }}>
+                      <div style={{ marginBottom: 16 }}>
+                        <label style={{ display: 'block', marginBottom: 8, fontSize: '0.88rem', color: '#cbd5e1', fontWeight: 600 }}>
+                          ✨ Live Gallery Preview ({galleryPreviews.length} photos):
+                        </label>
+                        <OriginImageGallery images={galleryPreviews} title={form.title || 'Project Preview'} />
+                      </div>
+
+                      <label style={{ display: 'block', marginBottom: 8, fontSize: '0.8rem', color: '#94a3b8' }}>
+                        Uploaded Photos ({galleryPreviews.length} items — click ✕ to remove):
+                      </label>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 8 }}>
+                        {galleryPreviews.map((src, i) => (
+                          <div key={i} style={{ position: 'relative', borderRadius: 6, overflow: 'hidden', aspectRatio: '1', background: '#0d1117' }}>
+                            <img src={src} alt={`Gallery ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setGalleryPreviews(p => p.filter((_, j) => j !== i));
+                                setGalleryFiles(p => p.filter((_, j) => j !== i));
+                              }}
+                              style={{
+                                position: 'absolute', top: 3, right: 3,
+                                background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%',
+                                color: '#fff', width: 20, height: 20, display: 'flex', alignItems: 'center',
+                                justifyContent: 'center', cursor: 'pointer', padding: 0, fontSize: 11
+                              }}
+                              aria-label="Remove photo"
+                            >
+                              <FiX />
+                            </button>
+                            {i === 0 && <span style={{ position: 'absolute', bottom: 3, left: 3, background: '#6366f1', color: '#fff', fontSize: '0.6rem', padding: '1px 5px', borderRadius: 3 }}>Cover</span>}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -783,6 +813,18 @@ const ProjectsTab = () => {
                         setForm(f => ({ ...f, embedUrl: e.target.value }));
                         if (e.target.value) setMediaType('video');
                       }} />
+                    <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center' }}>
+                      <input 
+                        type="checkbox" 
+                        id="isPortrait" 
+                        checked={form.isPortrait || false} 
+                        onChange={e => setForm(f => ({ ...f, isPortrait: e.target.checked }))} 
+                        style={{ marginRight: '8px', cursor: 'pointer' }} 
+                      />
+                      <label htmlFor="isPortrait" style={{ marginBottom: 0, fontWeight: '500', cursor: 'pointer' }}>
+                        Display as Portrait Video (9:16 aspect ratio)
+                      </label>
+                    </div>
                   </div>
                   {mediaFile && !form.embedUrl && (
                     <div style={{ marginTop: 4, fontSize: '0.78rem', color: '#94a3b8' }}>

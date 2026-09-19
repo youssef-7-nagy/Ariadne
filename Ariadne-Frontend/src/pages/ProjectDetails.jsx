@@ -5,6 +5,7 @@ import { resolveMedia } from '../utils/mediaResolver';
 import { ImageFallback } from '../components/media/ImageFallback';
 import { VideoFallback } from '../components/media/VideoFallback';
 import CursorNav from '../components/CursorNav';
+import OriginImageGallery from '../components/OriginImageGallery';
 import './Portfolio.css';
 
 import { API_URL } from '../utils/apiUrl';
@@ -92,7 +93,7 @@ const YouTubeModal = ({ videoId, onClose }) => {
                 </button>
                 <div className="pd-yt-modal-iframe-wrapper">
                     <iframe
-                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&controls=1&enablejsapi=1`}
+                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&controls=1&enablejsapi=1&cc_load_policy=0`}
                         className="pd-yt-modal-iframe"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
@@ -105,7 +106,7 @@ const YouTubeModal = ({ videoId, onClose }) => {
 };
 
 
-const CustomVideoPlayer = ({ src, poster, fallbackPosters = [] }) => {
+const CustomVideoPlayer = ({ src, poster, fallbackPosters = [], isPortrait = false }) => {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const iframeRef = React.useRef(null);
 
@@ -168,7 +169,7 @@ const CustomVideoPlayer = ({ src, poster, fallbackPosters = [] }) => {
     };
 
     return (
-        <div className="pd-video-wrapper">
+        <div className={`pd-video-wrapper ${isPortrait ? 'pd-video-portrait' : ''}`}>
             {!isPlaying ? (
                 <div
                     className="pd-video-poster-container"
@@ -279,6 +280,7 @@ const ProjectDetails = () => {
                         src={resolveUrl(videoMedia.url)}
                         poster={posterToUse}
                         fallbackPosters={fallbacks}
+                        isPortrait={project.isPortrait}
                     />
                 </div>
             );
@@ -292,6 +294,7 @@ const ProjectDetails = () => {
                         src={resolveUrl(embedMedia.url)}
                         poster={posterToUse}
                         fallbackPosters={fallbacks}
+                        isPortrait={project.isPortrait}
                     />
                 </div>
             );
@@ -308,6 +311,7 @@ const ProjectDetails = () => {
                             src={project.externalLink}
                             poster={mainImagePoster || coverPoster}
                             fallbackPosters={fallbacks}
+                            isPortrait={project.isPortrait}
                         />
                     </div>
                 );
@@ -369,10 +373,6 @@ const ProjectDetails = () => {
             const ytId = extractYoutubeVideoId(raw);
             if (ytId) return `https://www.youtube.com/watch?v=${ytId}`;
             return raw;
-        }
-        if (embedMedia?.url) {
-            const ytId = extractYoutubeVideoId(embedMedia.url);
-            if (ytId) return `https://www.youtube.com/watch?v=${ytId}`;
         }
         return null;
     };
@@ -452,14 +452,14 @@ const ProjectDetails = () => {
                     {/* Right Column: Featured Media */}
                     <div className="pd-media-column">
                         {project.mediaType === 'gallery' ? (
-                            /* ── Gallery mode: CursorNav ── */
+                            /* ── Gallery mode: Animated OriginImageGallery ── */
                             (() => {
                                 const galleryImages = (project.media || [])
                                     .filter(m => m.type === 'image')
                                     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
                                     .map(m => resolveUrl(m.url));
                                 return galleryImages.length > 0 ? (
-                                    <CursorNav images={galleryImages} imageFit="cover" />
+                                    <OriginImageGallery images={galleryImages} title={project.title} />
                                 ) : (
                                     <div className="pd-media-block" style={{ textAlign: 'center', padding: '4rem 2rem', background: '#0a0a0a', borderRadius: '12px' }}>
                                         <span style={{ color: '#64748b' }}>No gallery images yet.</span>
@@ -503,6 +503,7 @@ const ProjectDetails = () => {
                                             <CustomVideoPlayer
                                                 src={resolveUrl(item.url)}
                                                 poster={item.thumbnailUrl ? resolveUrl(item.thumbnailUrl) : undefined}
+                                                isPortrait={project.isPortrait}
                                             />
                                         </>
                                     ) : (

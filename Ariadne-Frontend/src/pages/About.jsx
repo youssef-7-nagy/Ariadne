@@ -87,8 +87,8 @@ const About = () => {
                     <div className="about-story-text">
                         <h2>Turning Vision Into <span>Visual Truth</span></h2>
                         <p>
-                            Founded with a single obsession — to make every brand look as extraordinary as it really is —
-                            Ariadne has grown into a full-service photography and documentation powerhouse.
+                            Founded with a single obsession…To make every idea and story counts<br />
+                            Ariadne has grown into full-service cinematography, documentation and storytelling powerhouse
                         </p>
                         <p>
                             From intimate product shoots to large-scale corporate campaigns, we bring the same relentless
@@ -167,9 +167,9 @@ const About = () => {
                             cardBorder="rgba(0, 0, 0, 0.08)"
                             shadow={true}
                             glow={true}
-                            glowStart="rgba(255, 78, 0, 0.25)"
-                            glowEnd="#ff4e00"
-                            glowIntensity={40}
+                            glowStart="rgba(124, 58, 237, 0.25)"
+                            glowEnd="#7c3aed"
+                            glowIntensity={45}
                         />
                     </div>
                 </div>
