@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import imgShortFilms from '../assets/categories/short-films.png';
 import imgDocumentaries from '../assets/categories/documentaries.png';
 import imgCommercials from '../assets/categories/commercials.png';
@@ -71,9 +72,17 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
+        let timer;
+        const debouncedResize = () => {
+            clearTimeout(timer);
+            timer = setTimeout(updateCarouselHeight, 100);
+        };
         updateCarouselHeight();
-        window.addEventListener('resize', updateCarouselHeight);
-        return () => window.removeEventListener('resize', updateCarouselHeight);
+        window.addEventListener('resize', debouncedResize, { passive: true });
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('resize', debouncedResize);
+        };
     }, [updateCarouselHeight]);
 
     const getCategoryBg = (category) => {
@@ -217,7 +226,14 @@ const Home = () => {
                             <span className="vf-corner vf-bl"></span>
                             <span className="vf-corner vf-br"></span>
 
-                            <img src={imgAboutStory} alt="Ariadne Photographer" className="hero-framed-photo" />
+                            <img 
+                                src={imgAboutStory} 
+                                alt="Ariadne Photographer" 
+                                className="hero-framed-photo" 
+                                loading="eager"
+                                fetchPriority="high"
+                                decoding="async"
+                            />
 
 
                         </div>
@@ -286,7 +302,12 @@ const Home = () => {
                                     transform: `rotate(${img.rotate}deg)`,
                                 }}
                             >
-                                <img src={img.src} alt={`Showcase visual ${idx + 1}`} />
+                                <img 
+                                    src={img.src} 
+                                    alt={`Showcase visual ${idx + 1}`} 
+                                    loading="lazy"
+                                    decoding="async"
+                                />
                             </div>
                         ))}
                     </div>
@@ -368,7 +389,9 @@ const Home = () => {
                                     </Link>
                                 );
                             }) : (
-                                <div style={{ color: '#fff', width: '100%', padding: '2rem' }}>Loading categories...</div>
+                                <div style={{ color: '#fff', width: '100%', padding: '2rem', display: 'flex', justifyContent: 'center' }}>
+                                    <LoadingSpinner />
+                                </div>
                             )}
                         </div>
 

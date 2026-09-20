@@ -3,8 +3,6 @@
    Inspired by Netflix, A24, Apple TV+ aesthetics
    ═══════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
-
 /* ─── Page Container ─── */
 .portfolio-container {
     min-height: 100vh;
@@ -1123,13 +1121,19 @@ html.dark .project-details-container {
     min-height: calc(100vh - 4rem);
 }
 
-/* ─── Grid Layout for Single Screen View ─── */
+/* ─── Grid Layout for 2-Column View (Text on Left, Media on Right) ─── */
 .pd-grid-layout {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: 1fr 1.3fr;
     gap: clamp(1.5rem, 3vw, 3rem);
     align-items: start;
     width: 100%;
+}
+
+@media (max-width: 992px) {
+    .pd-grid-layout {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ─── Back Link ─── */
@@ -1459,6 +1463,34 @@ html.dark .pd-description {
     }
 }
 
+/* ─── Main Media Wrapper ─── */
+.pd-main-media-wrapper {
+    width: 100%;
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.pd-main-media-portrait {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pd-main-media-portrait .pd-media-block {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+}
+
+.pd-main-media-landscape .pd-media-block {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 24px;
+}
+
 /* ─── Single Media Block ─── */
 .pd-media-block {
     position: relative;
@@ -1471,6 +1503,12 @@ html.dark .pd-description {
         0 8px 30px rgba(0, 0, 0, 0.08),
         0 1px 3px rgba(0, 0, 0, 0.02);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pd-media-block-portrait {
+    max-width: 360px;
+    margin: 0 auto;
+    border-radius: 24px;
 }
 
 html.dark .pd-media-block {
@@ -1504,7 +1542,8 @@ html.dark .pd-media-block {
 
 .pd-video-portrait {
     padding-bottom: 177.78%; /* 9:16 aspect ratio */
-    max-width: 450px;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
 }
 

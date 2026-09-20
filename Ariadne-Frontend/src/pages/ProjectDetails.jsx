@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { resolveMedia } from '../utils/mediaResolver';
 import { ImageFallback } from '../components/media/ImageFallback';
 import { VideoFallback } from '../components/media/VideoFallback';
-import CursorNav from '../components/CursorNav';
 import OriginImageGallery from '../components/OriginImageGallery';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import './Portfolio.css';
 
 import { API_URL } from '../utils/apiUrl';
@@ -17,13 +17,7 @@ const resolveUrl = (src) => {
     return `${API_URL}${src}`;
 };
 
-const isMobileOrTouchDevice = () => {
-    if (typeof window === 'undefined') return false;
-    const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua) || (typeof window.innerWidth !== 'undefined' && window.innerWidth <= 820);
-    return isIOS || isMobile;
-};
+
 
 /**
  * Extract a YouTube video ID from common YouTube URL formats.
@@ -62,48 +56,7 @@ const extractYoutubeVideoId = (url) => {
 };
 
 
-/* ─── YouTube Lightbox Modal ─── */
-const YouTubeModal = ({ videoId, onClose }) => {
-    // Close on ESC key
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') onClose();
-        };
-        document.addEventListener('keydown', handleKeyDown);
-        // Prevent body scroll while modal is open
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.body.style.overflow = '';
-        };
-    }, [onClose]);
 
-    const handleBackdropClick = (e) => {
-        if (e.target === e.currentTarget) onClose();
-    };
-
-    return (
-        <div className="pd-yt-modal-overlay" onClick={handleBackdropClick}>
-            <div className="pd-yt-modal-content">
-                <button className="pd-yt-modal-close" onClick={onClose} aria-label="Close video">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
-                <div className="pd-yt-modal-iframe-wrapper">
-                    <iframe
-                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&controls=1&enablejsapi=1&cc_load_policy=0`}
-                        className="pd-yt-modal-iframe"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                        title="YouTube video player"
-                    />
-                </div>
-            </div>
-        </div>
-    );
-};
 
 
 const CustomVideoPlayer = ({ src, poster, fallbackPosters = [], isPortrait = false }) => {
@@ -134,19 +87,10 @@ const CustomVideoPlayer = ({ src, poster, fallbackPosters = [], isPortrait = fal
     }, [poster, fallbackPosters, resolvedMedia]);
 
     const [posterIndex, setPosterIndex] = React.useState(0);
-    const [hasAllPostersFailed, setHasAllPostersFailed] = React.useState(false);
-
-    React.useEffect(() => {
-        setPosterIndex(0);
-        setHasAllPostersFailed(candidatePosters.length === 0);
-    }, [candidatePosters]);
+    const hasAllPostersFailed = candidatePosters.length === 0 || posterIndex >= candidatePosters.length;
 
     const handlePosterError = () => {
-        if (posterIndex + 1 < candidatePosters.length) {
-            setPosterIndex(prev => prev + 1);
-        } else {
-            setHasAllPostersFailed(true);
-        }
+        setPosterIndex(prev => prev + 1);
     };
 
     const currentPoster = candidatePosters[posterIndex];
@@ -243,10 +187,8 @@ const ProjectDetails = () => {
 
     if (isLoading) {
         return (
-            <div className="portfolio-container">
-                <div className="container text-center py-5">
-                    <h2>Loading Project...</h2>
-                </div>
+            <div className="portfolio-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+                <LoadingSpinner />
             </div>
         );
     }
@@ -266,6 +208,15 @@ const ProjectDetails = () => {
     const embedMedia = project.media?.find(m => m.type === 'embed');
     const imageMedia = project.media?.find(m => m.type === 'image');
 
+    const checkIsPortrait = (mediaUrl) => {
+        if (mediaUrl && String(mediaUrl).includes('youtube.com/shorts/')) {
+            return true;
+        }
+        return !!project?.isPortrait;
+    };
+
+    const isPortraitVideo = checkIsPortrait(videoMedia?.url || embedMedia?.url || project.externalLink);
+
     const renderMainMedia = () => {
         const mainImagePoster = imageMedia ? resolveUrl(imageMedia.url) : undefined;
         const coverPoster = project.coverImage ? resolveUrl(project.coverImage) : undefined;
@@ -274,13 +225,13 @@ const ProjectDetails = () => {
         if (videoMedia) {
             const posterToUse = videoMedia.thumbnailUrl ? resolveUrl(videoMedia.thumbnailUrl) : (mainImagePoster || coverPoster);
             return (
-                <div className="pd-media-block">
+                <div className={`pd-media-block ${isPortraitVideo ? 'pd-media-block-portrait' : ''}`}>
                     <span className="pd-media-badge">🎬 Video</span>
                     <CustomVideoPlayer
                         src={resolveUrl(videoMedia.url)}
                         poster={posterToUse}
                         fallbackPosters={fallbacks}
-                        isPortrait={project.isPortrait}
+                        isPortrait={isPortraitVideo}
                     />
                 </div>
             );
@@ -288,13 +239,13 @@ const ProjectDetails = () => {
         if (embedMedia) {
             const posterToUse = embedMedia.thumbnailUrl ? resolveUrl(embedMedia.thumbnailUrl) : (mainImagePoster || coverPoster);
             return (
-                <div className="pd-media-block">
+                <div className={`pd-media-block ${isPortraitVideo ? 'pd-media-block-portrait' : ''}`}>
                     <span className="pd-media-badge">🎬 Video</span>
                     <CustomVideoPlayer
                         src={resolveUrl(embedMedia.url)}
                         poster={posterToUse}
                         fallbackPosters={fallbacks}
-                        isPortrait={project.isPortrait}
+                        isPortrait={isPortraitVideo}
                     />
                 </div>
             );
@@ -305,13 +256,13 @@ const ProjectDetails = () => {
 
             if (isEmbeddableVideo) {
                 return (
-                    <div className="pd-media-block">
+                    <div className={`pd-media-block ${isPortraitVideo ? 'pd-media-block-portrait' : ''}`}>
                         <span className="pd-media-badge">🎬 Video</span>
                         <CustomVideoPlayer
                             src={project.externalLink}
                             poster={mainImagePoster || coverPoster}
                             fallbackPosters={fallbacks}
-                            isPortrait={project.isPortrait}
+                            isPortrait={isPortraitVideo}
                         />
                     </div>
                 );
@@ -513,6 +464,8 @@ const ProjectDetails = () => {
                                                 src={resolveUrl(item.url)}
                                                 alt={item.altText || project.title}
                                                 className="pd-image"
+                                                loading="lazy"
+                                                decoding="async"
                                             />
                                         </>
                                     )}
