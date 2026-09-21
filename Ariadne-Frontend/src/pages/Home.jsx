@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css';
@@ -61,13 +61,126 @@ const Home = () => {
     const [categories, setCategories] = useState([]);
     const [activeIndex, setActiveIndex] = useState(0);
     const [carouselHeight, setCarouselHeight] = useState(600);
+    const storySectionRef = useRef(null);
+    const iframeRef = useRef(null);
+    const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+
+    const handlePrev = useCallback(() => {
+        setActiveIndex(prev => prev - 1);
+    }, []);
+
+    const handleNext = useCallback(() => {
+        setActiveIndex(prev => prev + 1);
+    }, []);
+
+    // Touch & Swipe gesture interaction for 3D Category Carousel
+    const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
+    const hasSwipedRef = useRef(false);
+    const isSwipingActiveRef = useRef(false);
+    const isVerticalScrollRef = useRef(false);
+    const lastSwipeTimeRef = useRef(0);
+    const SWIPE_THRESHOLD = 40;
+
+    const handlePointerDown = (e) => {
+        if (!e.isPrimary) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        if (e.target.closest('.carousel-btn')) return;
+
+        touchStartRef.current = {
+            x: e.clientX,
+            y: e.clientY,
+            time: Date.now()
+        };
+        hasSwipedRef.current = false;
+        isSwipingActiveRef.current = true;
+        isVerticalScrollRef.current = false;
+    };
+
+    const handlePointerMove = (e) => {
+        if (!isSwipingActiveRef.current || hasSwipedRef.current) return;
+
+        const deltaX = e.clientX - touchStartRef.current.x;
+        const deltaY = e.clientY - touchStartRef.current.y;
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
+
+        // If vertical movement is dominant early, allow native page scroll
+        if (!isVerticalScrollRef.current && absY > absX && absY > 10) {
+            isVerticalScrollRef.current = true;
+            return;
+        }
+
+        if (isVerticalScrollRef.current) return;
+
+        // Check horizontal swipe threshold
+        if (absX >= SWIPE_THRESHOLD && absX > absY) {
+            const now = Date.now();
+            if (now - lastSwipeTimeRef.current < 250) return;
+            lastSwipeTimeRef.current = now;
+
+            hasSwipedRef.current = true;
+            isSwipingActiveRef.current = false;
+
+            // Direction mapping: SWIPE RIGHT -> NEXT, SWIPE LEFT -> PREV
+            if (deltaX > 0) {
+                handleNext();
+            } else {
+                handlePrev();
+            }
+        }
+    };
+
+    const handlePointerUp = (e) => {
+        if (!isSwipingActiveRef.current) {
+            setTimeout(() => {
+                hasSwipedRef.current = false;
+            }, 150);
+            return;
+        }
+
+        // Support quick flick if pointermove did not cross threshold yet
+        if (!hasSwipedRef.current && !isVerticalScrollRef.current) {
+            const deltaX = e.clientX - touchStartRef.current.x;
+            const deltaY = e.clientY - touchStartRef.current.y;
+            const absX = Math.abs(deltaX);
+            const absY = Math.abs(deltaY);
+
+            if (absX >= SWIPE_THRESHOLD && absX > absY) {
+                const now = Date.now();
+                if (now - lastSwipeTimeRef.current >= 250) {
+                    lastSwipeTimeRef.current = now;
+                    hasSwipedRef.current = true;
+                    if (deltaX > 0) {
+                        handleNext();
+                    } else {
+                        handlePrev();
+                    }
+                }
+            }
+        }
+
+        isSwipingActiveRef.current = false;
+        setTimeout(() => {
+            hasSwipedRef.current = false;
+        }, 150);
+    };
+
+    const handlePointerCancel = () => {
+        isSwipingActiveRef.current = false;
+        isVerticalScrollRef.current = false;
+        setTimeout(() => {
+            hasSwipedRef.current = false;
+        }, 150);
+    };
 
     const updateCarouselHeight = useCallback(() => {
         const w = window.innerWidth;
-        if (w <= 375) setCarouselHeight(320);
-        else if (w <= 480) setCarouselHeight(390);
-        else if (w <= 600) setCarouselHeight(450);
-        else if (w <= 768) setCarouselHeight(520);
+        const h = window.innerHeight;
+        if (w <= 360) setCarouselHeight(Math.min(350, Math.max(300, Math.round(h * 0.48))));
+        else if (w <= 480) setCarouselHeight(Math.min(390, Math.max(330, Math.round(h * 0.5))));
+        else if (w <= 600) setCarouselHeight(440);
+        else if (w <= 768) setCarouselHeight(500);
+        else if (w <= 1024) setCarouselHeight(540);
         else setCarouselHeight(600);
     }, []);
 
@@ -86,7 +199,7 @@ const Home = () => {
     }, [updateCarouselHeight]);
 
     const getCategoryBg = (category) => {
-        return category.coverImage ? resolveUrl(category.coverImage) : LOCAL_IMAGE_MAP[category.slug];
+        return LOCAL_IMAGE_MAP[category.slug] || (category.coverImage ? resolveUrl(category.coverImage) : '');
     };
 
     useEffect(() => {
@@ -103,6 +216,60 @@ const Home = () => {
 
         fetchCategories();
     }, []);
+
+    // Background video playback controller: start when arriving to section, pause when leaving
+    useEffect(() => {
+        const section = storySectionRef.current;
+        if (!section) return;
+
+        const sendCommand = (method, value) => {
+            try {
+                if (iframeRef.current && iframeRef.current.contentWindow) {
+                    iframeRef.current.contentWindow.postMessage(
+                        JSON.stringify({
+                            context: 'player.js',
+                            version: '0.0.11',
+                            method: method,
+                            value: value
+                        }),
+                        '*'
+                    );
+                }
+            } catch (err) {}
+        };
+
+        // 1. Proximity observer: Load video stream as user approaches (~300px before arrival)
+        const proximityObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setShouldLoadVideo(true);
+                    proximityObserver.disconnect();
+                }
+            },
+            { rootMargin: '300px 0px' }
+        );
+        proximityObserver.observe(section);
+
+        // 2. Playback observer: Plays when in viewport, pauses when scrolled out
+        const playbackObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    sendCommand('mute');
+                    sendCommand('play');
+                } else {
+                    sendCommand('pause');
+                }
+            },
+            { threshold: 0.15 }
+        );
+        playbackObserver.observe(section);
+
+        return () => {
+            proximityObserver.disconnect();
+            playbackObserver.disconnect();
+        };
+    }, []);
+
 
 
 
@@ -196,24 +363,6 @@ const Home = () => {
                             >
                                 Contact Us
                             </a>
-                        </div>
-
-                        {/* Stats */}
-                        <div className="hero-stats-row">
-                            <div className="hero-stat">
-                                <span className="hero-stat-num">500<sup>+</sup></span>
-                                <span className="hero-stat-label">Sessions</span>
-                            </div>
-                            <div className="hero-stat-sep"></div>
-                            <div className="hero-stat">
-                                <span className="hero-stat-num">8</span>
-                                <span className="hero-stat-label">Years</span>
-                            </div>
-                            <div className="hero-stat-sep"></div>
-                            <div className="hero-stat">
-                                <span className="hero-stat-num">100<sup>%</sup></span>
-                                <span className="hero-stat-label">Satisfaction</span>
-                            </div>
                         </div>
                     </div>
 
@@ -316,47 +465,141 @@ const Home = () => {
                     <div className="curved-center-content">
                         <h2>Create Timeless Photos<br />That Tell Your Story</h2>
                         <p>Professional photography for personal moments, brands, and unforgettable memories.</p>
-                        <Link to="/packages" className="btn-book-session-curved">Book a Session</Link>
+                        <a 
+                            href="#footer" 
+                            className="btn-book-session-curved"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const footer = document.getElementById('footer');
+                                if (footer) {
+                                    footer.scrollIntoView({ behavior: 'smooth' });
+                                    setTimeout(() => {
+                                        const magicMenu = document.querySelector('.magic-menu');
+                                        if (magicMenu) {
+                                            magicMenu.classList.add('force-open');
+                                            setTimeout(() => magicMenu.classList.remove('force-open'), 3000);
+                                        }
+                                    }, 800);
+                                }
+                            }}
+                        >
+                            Contact Us
+                        </a>
                     </div>
 
-                    {/* Footer features */}
-                    <div className="curved-footer-features">
-                        <div className="curved-feat-col">
-                            <h5>Fast Delivery</h5>
-                            <p>Get your edited gallery in a short time</p>
+                </div>
+
+                {/* Bottom features bar */}
+                <div className="video-bottom-features">
+                    <div className="curved-feat-col">
+                        <h5>Fast Delivery</h5>
+                        <p>Get your edited gallery in a short time</p>
+                    </div>
+                    <div className="curved-feat-divider"></div>
+                    <div className="curved-feat-col">
+                        <h5>Personal Approach</h5>
+                        <p>Every shoot is tailored to your vision</p>
+                    </div>
+                    <div className="curved-feat-divider"></div>
+                    <div className="curved-feat-col">
+                        <h5>Natural Style</h5>
+                        <p>Authentic photos with emotion and elegance</p>
+                    </div>
+                </div>
+            </section>
+
+
+            {/* Section 3: Video Showcase Section */}
+            <section className="home-white-section" ref={storySectionRef} aria-label="Cinematic Teaser">
+                <div className="home-video-bg-wrapper">
+                    {shouldLoadVideo && (
+                        <iframe
+                            ref={iframeRef}
+                            src="https://player.mediadelivery.net/embed/757833/c8ff08a7-dfe6-4d08-8bfb-84690d45c31e?autoplay=true&loop=true&muted=true&preload=true&responsive=true"
+                            loading="eager"
+                            className="home-video-bg-iframe"
+                            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                            tabIndex="-1"
+                            title="Cinematic Background Video"
+                        />
+                    )}
+                </div>
+
+                {/* Bottom features bar */}
+                <div className="video-bottom-features">
+                    <div className="curved-feat-col">
+                        <h5>Fast Delivery</h5>
+                        <p>Get your edited gallery in a short time</p>
+                    </div>
+                    <div className="curved-feat-divider"></div>
+                    <div className="curved-feat-col" style={{ position: 'relative' }}>
+                        {/* Center Video CTA */}
+                        <div className="video-center-cta">
+                            <a 
+                                href="#footer" 
+                                className="btn-book-session-curved"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    const footer = document.getElementById('footer');
+                                    if (footer) {
+                                        footer.scrollIntoView({ behavior: 'smooth' });
+                                        setTimeout(() => {
+                                            const magicMenu = document.querySelector('.magic-menu');
+                                            if (magicMenu) {
+                                                magicMenu.classList.add('force-open');
+                                                setTimeout(() => magicMenu.classList.remove('force-open'), 3000);
+                                            }
+                                        }, 800);
+                                    }
+                                }}
+                            >
+                                Contact Us
+                            </a>
                         </div>
-                        <div className="curved-feat-divider"></div>
-                        <div className="curved-feat-col">
-                            <h5>Personal Approach</h5>
-                            <p>Every shoot is tailored to your vision</p>
-                        </div>
-                        <div className="curved-feat-divider"></div>
-                        <div className="curved-feat-col">
-                            <h5>Natural Style</h5>
-                            <p>Authentic photos with emotion and elegance</p>
-                        </div>
+                        <h5>Personal Approach</h5>
+                        <p>Every shoot is tailored to your vision</p>
+                    </div>
+                    <div className="curved-feat-divider"></div>
+                    <div className="curved-feat-col">
+                        <h5>Natural Style</h5>
+                        <p>Authentic photos with emotion and elegance</p>
                     </div>
                 </div>
             </section>
 
 
             {/* Section 5: Expanding Categories Gallery */}
+
             <section className="home-section categories-section">
                 <div className="container text-center">
                     <h2 className="section-title">Our Expertise</h2>
                     <p className="section-subtitle">Explore the diverse range of visual storytelling categories we offer.</p>
 
-                    <div className="wrapper" style={{ height: `${carouselHeight}px`, marginTop: '20px' }}>
+                    <div
+                        className="wrapper"
+                        style={{ height: `${carouselHeight}px`, marginTop: '20px' }}
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerUp}
+                        onPointerCancel={handlePointerCancel}
+                        onClickCapture={(e) => {
+                            if (hasSwipedRef.current) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                        }}
+                    >
                         <button
                             className="carousel-btn prev-btn"
-                            onClick={() => setActiveIndex(prev => prev - 1)}
+                            onClick={handlePrev}
+                            aria-label="Previous category"
                         >
                             &#10094;
                         </button>
 
                         <div className="inner" style={{
                             '--quantity': categories.length || 10,
-                            transform: `perspective(1800px) rotateX(-15deg) rotateY(${-(360 / (categories.length || 1)) * activeIndex}deg)`
+                            transform: `perspective(var(--perspective, 1800px)) rotateX(var(--rotateX, -15deg)) rotateY(${-(360 / (categories.length || 1)) * activeIndex}deg)`
                         }}>
                             {categories.length > 0 ? categories.map((category, index) => {
                                 const bgImage = getCategoryBg(category);
@@ -397,7 +640,8 @@ const Home = () => {
 
                         <button
                             className="carousel-btn next-btn"
-                            onClick={() => setActiveIndex(prev => prev + 1)}
+                            onClick={handleNext}
+                            aria-label="Next category"
                         >
                             &#10095;
                         </button>
