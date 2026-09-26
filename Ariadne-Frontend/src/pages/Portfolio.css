@@ -361,6 +361,9 @@ html.dark .pf-card:hover {
 .pf-card-bg {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1695,6 +1698,7 @@ html.dark .pd-media-block {
     height: auto;
     max-height: 90vh;
     object-fit: contain;
+    image-orientation: from-image;
     display: block;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }

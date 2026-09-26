@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { getResponsiveSrcSet } from '../../utils/responsiveImage';
 import './ProjectGallery.css';
+
+const getThumbnailUrl = (src) => {
+    if (!src || typeof src !== 'string') return src;
+    const match = src.match(/^(.*\/uploads\/opt_[^.]+)(\.webp)$/i);
+    if (!match) return src;
+    if (match[1].endsWith('_600w') || match[1].endsWith('_1200w')) return src;
+    return `${match[1]}_600w${match[2]}`;
+};
 
 /**
  * Modern Thumbnail-Carousel / Gallery inspired by high-end photography portfolio branding.
@@ -43,6 +52,44 @@ export const ProjectGallery = ({
     const [activeIndex, setActiveIndex] = useState(0);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    const [orientations, setOrientations] = useState({});
+    const mainImgRef = useRef(null);
+
+    const updateOrientation = useCallback((src, naturalWidth, naturalHeight) => {
+        if (!src || !naturalWidth || !naturalHeight) return;
+        const ratio = naturalWidth / naturalHeight;
+        let orientation = 'landscape';
+        if (ratio < 0.88) {
+            orientation = 'portrait';
+        } else if (ratio > 1.15) {
+            orientation = 'landscape';
+        } else {
+            orientation = 'square';
+        }
+        setOrientations(prev => {
+            if (prev[src] === orientation) return prev;
+            return { ...prev, [src]: orientation };
+        });
+    }, []);
+
+    const handleImageLoad = (e) => {
+        const { naturalWidth, naturalHeight, currentSrc, src } = e.target;
+        const targetSrc = currentSrc || src || images[activeIndex]?.src;
+        updateOrientation(targetSrc, naturalWidth, naturalHeight);
+    };
+
+    // Fast resolution for cached or already loaded images
+    useEffect(() => {
+        const img = mainImgRef.current;
+        const curSrc = images[activeIndex]?.src;
+        if (img && img.complete && img.naturalWidth && img.naturalHeight) {
+            const targetSrc = img.currentSrc || img.src || curSrc;
+            updateOrientation(targetSrc, img.naturalWidth, img.naturalHeight);
+        }
+    }, [activeIndex, images, updateOrientation]);
+
+    const currentImage = images[activeIndex];
+    const currentOrientation = (currentImage?.src && orientations[currentImage.src]) || 'landscape';
 
     // Refs
     const stageRef = useRef(null);
@@ -199,13 +246,11 @@ export const ProjectGallery = ({
         );
     }
 
-    const currentImage = images[activeIndex];
-
     return (
         <div className={`project-gallery ${className}`} style={style}>
             {/* ─── Main Image Stage Container ─── */}
             <div
-                className="pg-main-stage"
+                className={`pg-main-stage is-${currentOrientation}`}
                 ref={stageRef}
                 onClick={() => setIsLightboxOpen(true)}
                 onTouchStart={handleTouchStart}
@@ -216,11 +261,15 @@ export const ProjectGallery = ({
             >
                 {/* Main Image strictly with object-fit: contain */}
                 <img
+                    ref={mainImgRef}
                     src={currentImage.src}
+                    srcSet={getResponsiveSrcSet(currentImage.src) || undefined}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 65vw"
                     alt={currentImage.alt}
                     className={`pg-main-image ${isAnimating ? 'pg-animating' : ''}`}
                     loading="eager"
                     decoding="async"
+                    onLoad={handleImageLoad}
                 />
 
                 {/* Subtle Expand Fullscreen Hint in Top Right */}
@@ -293,7 +342,7 @@ export const ProjectGallery = ({
                                 aria-label={`View photo ${idx + 1}`}
                             >
                                 <img
-                                    src={img.src}
+                                    src={getThumbnailUrl(img.src)}
                                     alt={`Thumbnail ${idx + 1}`}
                                     className="pg-thumb-image"
                                     loading="lazy"
@@ -382,6 +431,8 @@ export const ProjectGallery = ({
 
                         <img
                             src={currentImage.src}
+                            srcSet={getResponsiveSrcSet(currentImage.src) || undefined}
+                            sizes="100vw"
                             alt={currentImage.alt}
                             className="pg-lb-image"
                             onClick={(e) => e.stopPropagation()}
@@ -415,7 +466,7 @@ export const ProjectGallery = ({
                                         onClick={() => goTo(idx)}
                                         aria-label={`Go to image ${idx + 1}`}
                                     >
-                                        <img src={img.src} alt="" />
+                                        <img src={getThumbnailUrl(img.src)} alt="" loading="lazy" />
                                     </button>
                                 ))}
                             </div>
