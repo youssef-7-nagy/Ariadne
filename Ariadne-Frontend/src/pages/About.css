@@ -230,10 +230,10 @@
     overflow: hidden;
     inset: 0;
     transform: rotateY(calc((360deg / var(--quantity)) * var(--index))) translateZ(var(--translateZ));
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                border-color 0.5s ease, 
-                box-shadow 0.5s ease,
-                backdrop-filter 0.5s ease;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+        border-color 0.5s ease,
+        box-shadow 0.5s ease,
+        backdrop-filter 0.5s ease;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(8px);
@@ -249,8 +249,8 @@ html.dark .partner-card {
 
 .partner-card:hover {
     border-color: rgba(var(--color-card), 0.8);
-    box-shadow: 0 0 40px rgba(var(--color-card), 0.5), 
-                inset 0 0 20px rgba(var(--color-card), 0.2);
+    box-shadow: 0 0 40px rgba(var(--color-card), 0.5),
+        inset 0 0 20px rgba(var(--color-card), 0.2);
     transform: rotateY(calc((360deg / var(--quantity)) * var(--index))) translateZ(calc(var(--translateZ) + 35px)) scale(1.05);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -291,13 +291,13 @@ html.dark .partner-card {
     opacity: 0.85;
     transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.6s ease;
     z-index: 1;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .partner-card:hover .partner-img img {
     opacity: 1;
     transform: scale(1.15) translateY(-5px);
-    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
 }
 
 /* Fallback text logo styling */
@@ -307,7 +307,7 @@ html.dark .partner-card {
     color: rgba(var(--color-card), 0.9);
     z-index: 1;
     transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-    text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .partner-card:hover .text-logo {
@@ -546,23 +546,27 @@ html.dark .partner-card {
 }
 
 @media (max-width: 480px) {
-    .about-story, .about-values, .about-partners, .about-team {
+
+    .about-story,
+    .about-values,
+    .about-partners,
+    .about-team {
         padding: 60px 12px;
     }
-    
+
     .about-story-text h2 {
         font-size: 1.6rem;
     }
-    
+
     .about-stat-num {
         font-size: 1.6rem;
     }
-    
+
     .about-stat-row {
         flex-wrap: wrap;
         gap: 15px;
     }
-    
+
     .about-values-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
@@ -587,13 +591,13 @@ html.dark .partner-card {
         font-size: 0.73rem;
         line-height: 1.5;
     }
-    
+
     .partners-inner {
         --w: 70px;
         --h: 100px;
         --translateZ: 110px;
     }
-    
+
     .partners-carousel-wrap {
         height: 240px;
     }
@@ -642,19 +646,19 @@ html.dark .partner-card {
     .about-hero {
         padding: 80px 15px 40px;
     }
-    
+
     .about-hero h1 {
         font-size: 1.8rem;
     }
-    
+
     .about-hero-sub {
         font-size: 0.95rem;
     }
-    
+
     .about-story-text h2 {
         font-size: 1.4rem;
     }
-    
+
     .team-card-info h3 {
         font-size: 1.2rem;
     }
@@ -769,4 +773,3 @@ html.dark .partner-card {
         margin-top: 20px;
     }
 }
-

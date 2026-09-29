@@ -71,9 +71,9 @@ const About = () => {
                         </p>
                     </div>
                     <div className="about-story-img-wrap">
-                        <img 
-                            src={aboutStory} 
-                            alt="Ariadne team at work" 
+                        <img
+                            src={aboutStory}
+                            alt="Ariadne team at work"
                             loading="eager"
                             fetchPriority="high"
                             decoding="async"
