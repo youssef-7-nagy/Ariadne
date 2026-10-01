@@ -43,12 +43,330 @@ const resolveUrl = (src) => {
 
 
 
+// Section 1.5: Cloudinary Featured Cinematic Video Showcase with exact ARIA title sync & poster crossfade
+const CinematicFeaturedSection = React.memo(() => {
+    const sectionRef = useRef(null);
+    const videoRef = useRef(null);
+    const [isReady, setIsReady] = useState(false);
+    const [ariaVisible, setAriaVisible] = useState(false);
+    const [ariaKey, setAriaKey] = useState(0);
+    const [shouldLoad, setShouldLoad] = useState(false);
+    const [hasError, setHasError] = useState(false);
+
+    // 1. Proximity observer: buffer video shortly before entering viewport (~350px)
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section || typeof IntersectionObserver === 'undefined') {
+            setShouldLoad(true);
+            return;
+        }
+
+        const proximityObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setShouldLoad(true);
+                    proximityObserver.disconnect();
+                }
+            },
+            { rootMargin: '350px 0px' }
+        );
+        proximityObserver.observe(section);
+
+        return () => proximityObserver.disconnect();
+    }, []);
+
+    // 2. Playback controller: play when in view, pause when scrolled away
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section || !shouldLoad || typeof IntersectionObserver === 'undefined') return;
+
+        const playbackObserver = new IntersectionObserver(
+            ([entry]) => {
+                const video = videoRef.current;
+                if (!video) return;
+
+                if (entry.isIntersecting) {
+                    const playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch((e) => {
+                            if (e.name !== 'AbortError') {
+                                console.warn('[CinematicFeaturedSection] play notice:', e.message);
+                            }
+                        });
+                    }
+                } else {
+                    video.pause();
+                    setAriaVisible(false);
+                }
+            },
+            { threshold: 0.15 }
+        );
+        playbackObserver.observe(section);
+
+        return () => playbackObserver.disconnect();
+    }, [shouldLoad]);
+
+    // 3. Exact 0.6s ARIA Title sync with actual video playback time
+    const handleTimeUpdate = useCallback(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        const time = video.currentTime;
+        if (time >= 0.6) {
+            setAriaVisible(true);
+        } else {
+            // Video wrapped around / restarted loop
+            setAriaVisible(false);
+            setAriaKey(k => k + 1);
+        }
+    }, []);
+
+    const handleSeeked = useCallback(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.currentTime < 0.6) {
+            setAriaVisible(false);
+            setAriaKey(k => k + 1);
+        }
+    }, []);
+
+    const handleVideoPlaying = useCallback(() => {
+        setIsReady(true);
+    }, []);
+
+    const handleVideoError = useCallback(() => {
+        setHasError(true);
+    }, []);
+
+    const posterUrl = "https://res.cloudinary.com/dqvclzcod/video/upload/f_auto,q_auto,so_0/GR_Final_jy5ycc.jpg";
+    const videoUrl = "https://res.cloudinary.com/dqvclzcod/video/upload/f_auto,q_auto/GR_Final_jy5ycc.mp4";
+
+    return (
+        <section
+            className="home-white-section cloudinary-feat-section"
+            aria-label="Featured Cinematic Video"
+            ref={sectionRef}
+        >
+            <div className="home-video-bg-wrapper">
+                {/* Lightweight poster / first-frame preview: shows instantly, crossfades when video begins */}
+                <img
+                    src={posterUrl}
+                    alt="Cinematic Video Preview"
+                    className="home-video-bg-poster"
+                    style={{
+                        opacity: isReady && !hasError ? 0 : 1,
+                        pointerEvents: 'none'
+                    }}
+                    loading="eager"
+                    decoding="async"
+                />
+
+                {!hasError && (
+                    <video
+                        ref={videoRef}
+                        src={shouldLoad ? videoUrl : undefined}
+                        poster={posterUrl}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        webkit-playsinline="true"
+                        className="home-video-bg-video"
+                        preload={shouldLoad ? "auto" : "none"}
+                        onPlaying={handleVideoPlaying}
+                        onCanPlayThrough={handleVideoPlaying}
+                        onTimeUpdate={handleTimeUpdate}
+                        onSeeked={handleSeeked}
+                        onError={handleVideoError}
+                    />
+                )}
+            </div>
+
+            {/* Video Overlays */}
+            <div className="video-vignette-top"></div>
+            <div className="video-vignette-bottom"></div>
+
+            {/* Cinematic ARIA title — appears at exactly 0.6 s after video starts */}
+            <div
+                key={ariaKey}
+                className={`cloudinary-aria-title${ariaVisible ? ' cloudinary-aria-title--visible' : ''}`}
+                aria-hidden="true"
+            >
+                <span className="cloudinary-aria-word">ARI<span className="reversed-a">A</span></span>
+            </div>
+        </section>
+    );
+});
+CinematicFeaturedSection.displayName = 'CinematicFeaturedSection';
+
+// Section 2: Bunny.net Video Showcase Section with lazy viewport loading
+const BunnyShowcaseSection = React.memo(() => {
+    const sectionRef = useRef(null);
+    const iframeRef = useRef(null);
+    const [shouldLoad, setShouldLoad] = useState(false);
+    const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+
+    // 1. Proximity observer: start preparing iframe when user approaches (~400px before arrival)
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section || typeof IntersectionObserver === 'undefined') {
+            setShouldLoad(true);
+            return;
+        }
+
+        const proximityObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setShouldLoad(true);
+                    proximityObserver.disconnect();
+                }
+            },
+            { rootMargin: '400px 0px' }
+        );
+        proximityObserver.observe(section);
+
+        return () => proximityObserver.disconnect();
+    }, []);
+
+    // 2. Playback controller: send play/pause commands based on viewport visibility
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section || !shouldLoad || typeof IntersectionObserver === 'undefined') return;
+
+        const sendCommand = (method, value) => {
+            try {
+                if (iframeRef.current && iframeRef.current.contentWindow) {
+                    iframeRef.current.contentWindow.postMessage(
+                        JSON.stringify({
+                            context: 'player.js',
+                            version: '0.0.11',
+                            method: method,
+                            value: value
+                        }),
+                        '*'
+                    );
+                }
+            } catch (_) {}
+        };
+
+        const playbackObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    sendCommand('mute', '');
+                    sendCommand('play', '');
+                } else {
+                    sendCommand('pause', '');
+                }
+            },
+            { threshold: 0.15 }
+        );
+        playbackObserver.observe(section);
+
+        return () => playbackObserver.disconnect();
+    }, [shouldLoad]);
+
+    const handleIframeLoad = useCallback(() => {
+        setIsIframeLoaded(true);
+        try {
+            if (iframeRef.current && iframeRef.current.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(
+                    JSON.stringify({
+                        context: 'player.js',
+                        version: '0.0.11',
+                        method: 'mute',
+                        value: ''
+                    }),
+                    '*'
+                );
+                iframeRef.current.contentWindow.postMessage(
+                    JSON.stringify({
+                        context: 'player.js',
+                        version: '0.0.11',
+                        method: 'play',
+                        value: ''
+                    }),
+                    '*'
+                );
+            }
+        } catch (_) {}
+    }, []);
+
+    return (
+        <section className="home-white-section" ref={sectionRef} aria-label="Cinematic Teaser">
+            <div className="home-video-bg-wrapper">
+                {shouldLoad && (
+                    <iframe
+                        ref={iframeRef}
+                        src="https://player.mediadelivery.net/embed/763964/9bb34416-21bc-41f3-80b7-2b1225696c5f?autoplay=true&loop=true&muted=true&preload=false&responsive=true"
+                        loading="lazy"
+                        className="home-video-bg-iframe"
+                        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;"
+                        allowFullScreen={true}
+                        tabIndex="-1"
+                        title="Cinematic Background Video"
+                        onLoad={handleIframeLoad}
+                        style={{
+                            opacity: isIframeLoaded ? 1 : 0,
+                            transition: 'opacity 0.6s ease'
+                        }}
+                    />
+                )}
+            </div>
+
+            {/* Video Overlays */}
+            <div className="video-vignette-top"></div>
+            <div className="video-vignette-bottom"></div>
+
+            {/* Bottom features bar */}
+            <div className="video-bottom-features">
+                <div className="curved-feat-col">
+                    <h5>Fast Delivery</h5>
+                    <p>Get your edited gallery in a short time</p>
+                </div>
+                <div className="curved-feat-divider"></div>
+                <div className="curved-feat-col" style={{ position: 'relative' }}>
+                    {/* Center Video CTA */}
+                    <div className="video-center-cta">
+                        <a
+                            href="#footer"
+                            className="btn-book-session-curved"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (window.lenis) {
+                                    window.lenis.scrollTo('#footer', { duration: 1.5 });
+                                } else {
+                                    const footer = document.getElementById('footer');
+                                    if (footer) footer.scrollIntoView({ behavior: 'smooth' });
+                                }
+                                setTimeout(() => {
+                                    const magicMenu = document.querySelector('.magic-menu');
+                                    if (magicMenu) {
+                                        magicMenu.classList.add('force-open');
+                                        setTimeout(() => magicMenu.classList.remove('force-open'), 3000);
+                                    }
+                                }, 800);
+                            }}
+                        >
+                            Contact Us
+                        </a>
+                    </div>
+                    <h5>Personal Approach</h5>
+                    <p>Every shoot is tailored to your vision</p>
+                </div>
+                <div className="curved-feat-divider"></div>
+                <div className="curved-feat-col">
+                    <h5>Natural Style</h5>
+                    <p>Authentic photos with emotion and elegance</p>
+                </div>
+            </div>
+        </section>
+    );
+});
+BunnyShowcaseSection.displayName = 'BunnyShowcaseSection';
+
 const Home = () => {
     const [categories, setCategories] = useState([]);
     const [activeIndex, setActiveIndex] = useState(0);
     const [carouselHeight, setCarouselHeight] = useState(600);
-    const storySectionRef = useRef(null);
-    const iframeRef = useRef(null);
 
     const handlePrev = useCallback(() => {
         setActiveIndex(prev => prev - 1);
@@ -202,31 +520,7 @@ const Home = () => {
         fetchCategories();
     }, []);
 
-    // Background video playback controller: ensure it is playing and muted
-    useEffect(() => {
-        const sendCommand = (method, value) => {
-            try {
-                if (iframeRef.current && iframeRef.current.contentWindow) {
-                    iframeRef.current.contentWindow.postMessage(
-                        JSON.stringify({
-                            context: 'player.js',
-                            version: '0.0.11',
-                            method: method,
-                            value: value
-                        }),
-                        '*'
-                    );
-                }
-            } catch (err) { }
-        };
 
-        const timer = setTimeout(() => {
-            sendCommand('mute');
-            sendCommand('play');
-        }, 300);
-
-        return () => clearTimeout(timer);
-    }, []);
 
 
 
@@ -295,68 +589,11 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* Section 1.5: Featured Cinematic Video Showcase */}
+            <CinematicFeaturedSection />
+
             {/* Section 2: Video Showcase Section */}
-            <section className="home-white-section" ref={storySectionRef} aria-label="Cinematic Teaser">
-                <div className="home-video-bg-wrapper">
-                    <iframe
-                        ref={iframeRef}
-                        src="https://player.mediadelivery.net/embed/763964/9bb34416-21bc-41f3-80b7-2b1225696c5f?autoplay=true&loop=true&muted=true&preload=true&responsive=true"
-                        loading="eager"
-                        className="home-video-bg-iframe"
-                        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;"
-                        allowFullScreen={true}
-                        tabIndex="-1"
-                        title="Cinematic Background Video"
-                    />
-                </div>
-
-                {/* Video Overlays */}
-                <div className="video-vignette-top"></div>
-                <div className="video-vignette-bottom"></div>
-
-                {/* Bottom features bar */}
-                <div className="video-bottom-features">
-                    <div className="curved-feat-col">
-                        <h5>Fast Delivery</h5>
-                        <p>Get your edited gallery in a short time</p>
-                    </div>
-                    <div className="curved-feat-divider"></div>
-                    <div className="curved-feat-col" style={{ position: 'relative' }}>
-                        {/* Center Video CTA */}
-                        <div className="video-center-cta">
-                            <a
-                                href="#footer"
-                                className="btn-book-session-curved"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (window.lenis) {
-                                        window.lenis.scrollTo('#footer', { duration: 1.5 });
-                                    } else {
-                                        const footer = document.getElementById('footer');
-                                        if (footer) footer.scrollIntoView({ behavior: 'smooth' });
-                                    }
-                                    setTimeout(() => {
-                                        const magicMenu = document.querySelector('.magic-menu');
-                                        if (magicMenu) {
-                                            magicMenu.classList.add('force-open');
-                                            setTimeout(() => magicMenu.classList.remove('force-open'), 3000);
-                                        }
-                                    }, 800);
-                                }}
-                            >
-                                Contact Us
-                            </a>
-                        </div>
-                        <h5>Personal Approach</h5>
-                        <p>Every shoot is tailored to your vision</p>
-                    </div>
-                    <div className="curved-feat-divider"></div>
-                    <div className="curved-feat-col">
-                        <h5>Natural Style</h5>
-                        <p>Authentic photos with emotion and elegance</p>
-                    </div>
-                </div>
-            </section>
+            <BunnyShowcaseSection />
 
 
             {/* Section 5: Expanding Categories Gallery */}

@@ -4025,52 +4025,77 @@ html.dark,
     }
 }
 
-/* Mobile Devices (<= 768px): 16:9 video section with overlay text */
+/* Mobile Devices (<= 768px): 16:9 cinematic full-width video section with text overlay */
 @media (max-width: 768px) {
     .home-white-section {
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        aspect-ratio: 16 / 9;
-        height: auto;
-        min-height: 0;
-        max-height: none;
-        overflow: hidden;
-        position: relative;
-        background-color: transparent;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        aspect-ratio: 16 / 9 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: hidden !important;
+        position: relative !important;
+        background-color: #000000 !important;
     }
 
     .home-white-section .home-video-bg-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: none;
-        width: 100%;
-        height: 100%;
-        aspect-ratio: 16 / 9;
-        min-height: 0;
-        min-width: 0;
-        overflow: hidden;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        width: 100% !important;
+        height: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        min-height: 100% !important;
+        min-width: 100% !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
     }
 
-    .home-white-section .home-video-bg-iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
+    .home-white-section .home-video-bg-iframe,
+    .home-white-section .home-video-bg-video,
+    .home-white-section .home-video-bg-poster {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border: 0 !important;
+        pointer-events: none !important;
+    }
+
+    .video-vignette-top {
+        height: clamp(24px, 5vw, 40px) !important;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, transparent 100%) !important;
+    }
+
+    .video-vignette-bottom {
+        display: none !important;
     }
 
     .video-bottom-features {
-        padding: clamp(14px, 4vw, 24px) clamp(6px, 2vw, 14px) clamp(6px, 2vw, 12px) !important;
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: space-between !important;
+        padding: clamp(14px, 3.5vw, 22px) clamp(8px, 2.5vw, 16px) clamp(8px, 2vw, 12px) !important;
         gap: clamp(4px, 1.5vw, 10px) !important;
         background: linear-gradient(
             to top,
-            rgba(0, 0, 0, 0.72) 0%,
-            rgba(0, 0, 0, 0.35) 60%,
+            rgba(0, 0, 0, 0.88) 0%,
+            rgba(0, 0, 0, 0.55) 55%,
             transparent 100%
         ) !important;
+        z-index: 10 !important;
+        box-sizing: border-box !important;
     }
 
     .video-bottom-features .curved-feat-col {
@@ -4078,14 +4103,21 @@ html.dark,
         flex: 1 1 0 !important;
         min-width: 0 !important;
         padding: 0 2px !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
     }
 
     .video-bottom-features .curved-feat-col h5 {
         font-size: clamp(0.58rem, 2.2vw, 0.78rem) !important;
         font-weight: 700 !important;
-        margin-bottom: 2px !important;
+        color: #ffffff !important;
+        margin: 0 0 2px 0 !important;
         line-height: 1.15 !important;
-        white-space: nowrap !important;
+        white-space: normal !important;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important;
     }
 
     .video-bottom-features .curved-feat-col p {
@@ -4093,12 +4125,17 @@ html.dark,
         line-height: 1.2 !important;
         letter-spacing: -0.01em !important;
         color: rgba(255, 255, 255, 0.85) !important;
+        margin: 0 !important;
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9) !important;
     }
 
     .video-bottom-features .curved-feat-divider {
-        height: clamp(16px, 4vw, 24px) !important;
-        margin-bottom: 3px !important;
+        width: 1px !important;
+        height: clamp(18px, 4vw, 24px) !important;
+        margin-top: 2px !important;
+        margin-bottom: 0 !important;
         background: rgba(255, 255, 255, 0.25) !important;
+        flex-shrink: 0 !important;
     }
 
     /* Hide Contact Us on mobile so it doesn't obstruct video */
@@ -4110,12 +4147,12 @@ html.dark,
 /* Extra small mobile screens (<= 400px) */
 @media (max-width: 400px) {
     .video-bottom-features {
-        padding: 8px 4px 4px !important;
+        padding: 10px 5px 5px !important;
         gap: 2px !important;
     }
 
     .video-bottom-features .curved-feat-col h5 {
-        font-size: clamp(0.50rem, 2.5vw, 0.64rem) !important;
+        font-size: clamp(0.50rem, 2.4vw, 0.65rem) !important;
     }
 
     .video-bottom-features .curved-feat-col p {
@@ -4164,14 +4201,28 @@ html.dark,
     overflow: hidden;
 }
 
-.home-video-bg-iframe {
+.home-video-bg-iframe,
+.home-video-bg-video {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    object-fit: cover;
     border: 0;
     pointer-events: none;
+}
+
+.home-video-bg-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ==========================================================================
@@ -4421,11 +4472,12 @@ html.dark,
     }
 
     .video-vignette-top {
-        height: 65px;
+        height: clamp(24px, 5vw, 40px);
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
     }
 
     .video-vignette-bottom {
-        height: 75px;
+        display: none;
     }
 
     .video-intro-ariadne {
@@ -4621,4 +4673,120 @@ html.dark,
     padding: clamp(9px, 1.8vw, 14px) clamp(22px, 3.5vw, 38px);
     font-size: clamp(0.75rem, 1.5vw, 0.88rem);
     letter-spacing: 0.06em;
+}
+
+/* ==========================================================================
+   CLOUDINARY SECTION — CINEMATIC "ARIA" TITLE OVERLAY
+   Strictly scoped to .cloudinary-feat-section
+   ========================================================================== */
+
+/* Keyframe: starts invisible, fades + scales up elegantly */
+@keyframes aria-title-reveal {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.88);
+        letter-spacing: 0.32em;
+    }
+    60% {
+        opacity: 0.85;
+        transform: translate(-50%, -50%) scale(1.015);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        letter-spacing: 0.22em;
+    }
+}
+
+/* Container: always present for layout stability, invisible until --visible */
+.cloudinary-aria-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 8;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Hidden by default — no opacity/animation yet */
+    opacity: 0;
+    /* Prevent any layout shift */
+    will-change: opacity, transform;
+    white-space: nowrap;
+}
+
+/* Reveal state: triggered by JS adding --visible class */
+.cloudinary-aria-title--visible {
+    animation: aria-title-reveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* The word itself */
+.cloudinary-aria-word {
+    font-family: 'VALORANT', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    /* Fluid type: from 3.5rem on small phones up to 9rem on wide desktop */
+    font-size: clamp(3.2rem, 9.5vw, 9rem);
+    letter-spacing: 0.22em;
+    color: #ffffff;
+    /* Subtle text shadow for depth against varying video frames */
+    text-shadow:
+        0 2px 40px rgba(0, 0, 0, 0.55),
+        0 0 120px rgba(255, 255, 255, 0.08);
+    /* Crisp rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1;
+    display: block;
+}
+
+/* ── Responsive overrides ── */
+
+/* Tablet portrait */
+@media (max-width: 1024px) and (orientation: portrait) {
+    .cloudinary-aria-word {
+        font-size: clamp(2.8rem, 10vw, 6rem);
+        letter-spacing: 0.20em;
+    }
+}
+
+/* Mobile (<= 768px) */
+@media (max-width: 768px) {
+    .cloudinary-aria-word {
+        font-size: clamp(2.4rem, 12vw, 4.8rem);
+        letter-spacing: 0.18em;
+    }
+}
+
+/* Small phones (<= 400px) */
+@media (max-width: 400px) {
+    .cloudinary-aria-word {
+        font-size: clamp(2rem, 13vw, 3.4rem);
+        letter-spacing: 0.14em;
+    }
+}
+
+/* Landscape short screens */
+@media (orientation: landscape) and (max-height: 520px) {
+    .cloudinary-aria-word {
+        font-size: clamp(2.2rem, 8vh, 4rem);
+        letter-spacing: 0.16em;
+    }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .cloudinary-aria-title--visible {
+        animation: none;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        transition: opacity 0.4s ease;
+    }
+}
+
+.reversed-a {
+    display: inline-block;
+    transform: scaleX(-1);
+    margin-left: -0.28em; /* Pull it slightly to the left to match the logo kerning */
 }
