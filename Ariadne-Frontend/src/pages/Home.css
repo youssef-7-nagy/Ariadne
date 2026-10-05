@@ -3993,15 +3993,19 @@ html.dark,
     box-sizing: border-box;
 }
 
-/* Homepage Hero Video Section (Desktop: fill 100% visible viewport height) */
-@media (min-width: 1025px) {
-    .cloudinary-feat-section {
-        height: 92vh;
-        height: 92svh;
-        height: 92dvh;
-        min-height: 600px;
-        max-height: none;
-    }
+/* Homepage Hero Video Section (Fully Responsive 16:9 across all devices) */
+.home-white-section.cloudinary-feat-section {
+    position: relative !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    min-height: unset !important;
+    max-height: none !important;
+    padding: 0 !important;
+    overflow: hidden !important;
 }
 
 /* Base Video Background Wrapper - fills container cleanly with native object-fit */
