@@ -3993,6 +3993,17 @@ html.dark,
     box-sizing: border-box;
 }
 
+/* Homepage Hero Video Section (Desktop: fill 100% visible viewport height) */
+@media (min-width: 1025px) {
+    .cloudinary-feat-section {
+        height: 92vh;
+        height: 92svh;
+        height: 92dvh;
+        min-height: 600px;
+        max-height: none;
+    }
+}
+
 /* Base Video Background Wrapper - fills container cleanly with native object-fit */
 .home-video-bg-wrapper {
     position: absolute;
