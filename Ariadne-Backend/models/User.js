@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema(
     facebookId: { type: String, unique: true, sparse: true },
     appleId: { type: String, unique: true, sparse: true },
     avatar: { type: String, default: "" },
+    companyName: { type: String, trim: true, default: "" },
+    companyLogo: { type: String, default: "" },
     // ─────────────────────────────────────────────────────────────────────────
     savedCards: [{
       cardName: String,

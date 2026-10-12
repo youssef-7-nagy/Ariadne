@@ -14,7 +14,7 @@ const uploadService = multer({
   storage,
   limits: { fileSize: 3 * 1024 * 1024 * 1024 }, // 3 GB
   fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp|avif|heic|mp4|mov|avi|webm|mkv|m4v|hevc/;
+    const allowed = /jpeg|jpg|png|gif|webp|avif|heic|svg|mp4|mov|avi|webm|mkv|m4v|hevc/;
     const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
     if (allowed.test(ext)) {
       cb(null, true);

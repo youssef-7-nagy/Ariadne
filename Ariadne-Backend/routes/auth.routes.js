@@ -6,8 +6,11 @@ const authController = require("../controllers/auth.controller.js");
 const { authMiddleWare } = require("../middlewares/auth.middleware.js");
 const { adminOnly, superAdminOnly } = require("../middlewares/admin.middleware.js");
 
-// ─── Email / Password routes (unchanged) ─────────────────────────────────────
+const upload = require("../services/upload.service.js");
+
+// ─── Email / Password & Profile routes ─────────────────────────────────────
 router.get("/me", authMiddleWare, authController.validateMe);
+router.put("/me", authMiddleWare, upload.single("companyLogo"), authController.updateProfile);
 router.put("/me/gender", authMiddleWare, authController.updateMyGender);
 
 router.post("/register", authController.register);

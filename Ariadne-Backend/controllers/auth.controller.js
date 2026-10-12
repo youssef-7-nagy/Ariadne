@@ -83,7 +83,9 @@ const buildUserPayload = (user) => ({
   phone: user.phone || "",
   role: user.role,
   gender: user.gender || null,
-  avatar: user.avatar || "",
+  avatar: user.avatar || user.companyLogo || "",
+  companyName: user.companyName || "",
+  companyLogo: user.companyLogo || user.avatar || "",
   savedCards: user.savedCards || [],
   provider: user.googleId ? "google" : (user.facebookId ? "facebook" : (user.appleId ? "apple" : "local")),
 });
@@ -416,10 +418,62 @@ async function oauthCallback(request, response) {
   }
 }
 
+async function updateProfile(request, response) {
+  try {
+    const id = request.user.id;
+    const user = await User.findById(id);
+
+    if (!user) {
+      return response.status(404).json({ message: "User not found" });
+    }
+
+    const { name, phone, companyName, gender, removeLogo } = request.body || {};
+
+    if (name && name.trim()) {
+      user.name = name.trim();
+    }
+    if (phone !== undefined) {
+      user.phone = (phone || "").trim();
+    }
+    if (companyName !== undefined) {
+      user.companyName = (companyName || "").trim();
+    }
+    if (gender && ["male", "female"].includes(gender.toLowerCase())) {
+      user.gender = gender.toLowerCase();
+    }
+
+    if (request.file) {
+      const logoUrl = `/uploads/${request.file.filename}`;
+      user.companyLogo = logoUrl;
+      user.avatar = logoUrl;
+    } else if (removeLogo === 'true' || removeLogo === true) {
+      user.companyLogo = "";
+      user.avatar = "";
+    } else if (request.body.companyLogo !== undefined && typeof request.body.companyLogo === 'string') {
+      user.companyLogo = request.body.companyLogo.trim();
+      user.avatar = request.body.companyLogo.trim();
+    }
+
+    await user.save();
+
+    return response.json({
+      success: true,
+      message: "Profile updated successfully",
+      data: {
+        user: buildUserPayload(user),
+      },
+    });
+  } catch (error) {
+    console.error("updateProfile error:", error);
+    return response.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   register,
   login,
   validateMe,
+  updateProfile,
   forgotPassword,
   resetPassword,
   getAllUsers,
