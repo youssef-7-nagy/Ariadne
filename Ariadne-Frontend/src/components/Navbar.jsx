@@ -84,6 +84,30 @@ export const Navbar = ({ isLoggedIn = false, userData = null, onLogout, theme, t
 
 
 
+    const handleLogoClick = (e) => {
+        e.preventDefault();
+        setIsMobileMenuOpen(false);
+        setIsDropdownOpen(false);
+
+        if (location.pathname === '/') {
+            if (window.lenis) {
+                window.lenis.scrollTo(0, { duration: 1.2 });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        } else {
+            navigate('/');
+            // Ensure landing on home starts from the top
+            setTimeout(() => {
+                if (window.lenis) {
+                    window.lenis.scrollTo(0, { immediate: true });
+                } else {
+                    window.scrollTo(0, 0);
+                }
+            }, 50);
+        }
+    };
+
     // ─────────────────────────────────────────────────────────────
     // 2. ALL OTHER PAGES (Original clean white navbar with rounded pill navigation)
     // ─────────────────────────────────────────────────────────────
@@ -98,8 +122,12 @@ export const Navbar = ({ isLoggedIn = false, userData = null, onLogout, theme, t
                 {/* ARIA Logo on left */}
                 <div
                     className="logo"
-                    onClick={() => navigate('/')}
+                    onClick={handleLogoClick}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleLogoClick(e); }}
                     style={{ cursor: 'pointer' }}
+                    aria-label="Ariadne Home and Scroll to Top"
                 >
                     <img src="/mylogo.png" alt="ARIA Artistic Production" className="logo-img" />
                 </div>
@@ -107,7 +135,22 @@ export const Navbar = ({ isLoggedIn = false, userData = null, onLogout, theme, t
                 {/* Centered Rounded Pill Nav Links */}
                 <ul className={`nav-links default-nav-links ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
                     <li>
-                        <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')} onClick={() => setIsMobileMenuOpen(false)}>
+                        <NavLink
+                            to="/"
+                            end
+                            className={({ isActive }) => (isActive ? 'active' : '')}
+                            onClick={(e) => {
+                                setIsMobileMenuOpen(false);
+                                if (location.pathname === '/') {
+                                    e.preventDefault();
+                                    if (window.lenis) {
+                                        window.lenis.scrollTo(0, { duration: 1.2 });
+                                    } else {
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }
+                                }
+                            }}
+                        >
                             Home
                         </NavLink>
                     </li>
